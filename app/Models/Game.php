@@ -9,7 +9,9 @@ class Game extends Model
 {
     use HasFactory;
 
-    protected $dates = ['start_at'];
+    protected $casts = [
+        'start_at' => 'datetime'
+    ];
 
     public function homeTeam()
     {
