@@ -23,8 +23,8 @@ class UserSeeder extends Seeder
         // ])->assignRole(Role::findByName('Super admin'));
 
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@test.com',
-        ]);
+            'name' => 'Super admin',
+            'email' => 'superadmin@test.com',
+        ])->assignRole(Role::findByName('Super admin'));
     }
 }

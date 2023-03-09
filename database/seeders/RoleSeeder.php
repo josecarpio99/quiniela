@@ -16,12 +16,20 @@ class RoleSeeder extends Seeder
      */
     public function run()
     {
-        // Role::create(['name' => 'Super admin']);
+        Role::create(['name' => 'Super admin']);
 
+        // Team permissions
         Permission::create(['name' => 'team.index']);
         Permission::create(['name' => 'team.store']);
         Permission::create(['name' => 'team.show']);
         Permission::create(['name' => 'team.update']);
         Permission::create(['name' => 'team.destroy']);
+
+        // Game permissions
+        Permission::create(['name' => 'game.index']);
+        Permission::create(['name' => 'game.store']);
+        Permission::create(['name' => 'game.show']);
+        Permission::create(['name' => 'game.update']);
+        Permission::create(['name' => 'game.destroy']);
     }
 }
