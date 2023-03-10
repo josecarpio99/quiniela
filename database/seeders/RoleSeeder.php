@@ -32,5 +32,12 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'game.show']);
         Permission::create(['name' => 'game.update']);
         Permission::create(['name' => 'game.destroy']);
+
+        // Quiniela permissions
+        Permission::create(['name' => 'quiniela.index']);
+        Permission::create(['name' => 'quiniela.store']);
+        Permission::create(['name' => 'quiniela.show']);
+        Permission::create(['name' => 'quiniela.update']);
+        Permission::create(['name' => 'quiniela.destroy']);
     }
 }

@@ -9,7 +9,10 @@ class Quiniela extends Model
 {
     use HasFactory;
 
-    protected $dates = ['close_at'];
+    protected $casts = [
+        'close_at' => 'datetime',
+        'prize'    => 'array',
+    ];
 
     public function games()
     {
