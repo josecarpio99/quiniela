@@ -38,6 +38,6 @@ class ApiController extends Controller
      */
     public function noContent(): Response
     {
-        return response()->setStatusCode(204);
+        return response()->noContent();
     }
 }
