@@ -17,6 +17,8 @@ class GameController extends ApiController
      */
     public function index()
     {
+        $this->authorize('game.index');
+
         return GameResource::collection((Game::paginate(10)));
     }
 
@@ -28,6 +30,8 @@ class GameController extends ApiController
      */
     public function store(StoreGameRequest $request)
     {
+        $this->authorize('game.store');
+
         $game = Game::create($request->validated());
 
         return new GameResource($game);
@@ -41,6 +45,8 @@ class GameController extends ApiController
      */
     public function show(Game $game)
     {
+        $this->authorize('game.show');
+
         return new GameResource($game);
     }
 
@@ -53,6 +59,8 @@ class GameController extends ApiController
      */
     public function update(UpdateGameRequest $request, Game $game)
     {
+        $this->authorize('game.update');
+
         $game->update($request->validated());
 
         return new GameResource($game);
@@ -66,6 +74,8 @@ class GameController extends ApiController
      */
     public function destroy(Game $game)
     {
+        $this->authorize('game.destroy');
+
         $game->delete();
 
         return $this->noContent();
