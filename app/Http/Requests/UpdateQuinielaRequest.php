@@ -28,7 +28,8 @@ class UpdateQuinielaRequest extends FormRequest
             'close_at'         => ['required', 'date_format:Y-m-d H:i'],
             'prize.*.position' => ['required', 'integer'],
             'prize.*.amount'   => ['required', 'regex:/^\d+(\.\d{1,2})?$/'],
-            'game.*.id'        => ['required', 'exists:games,id'],
+            'games'            => ['required'],
+            'games.*.id'       => ['required', 'exists:games,id'],
         ];
     }
 }
