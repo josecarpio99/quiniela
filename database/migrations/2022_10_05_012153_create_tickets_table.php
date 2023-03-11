@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('tickets', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
-            $table->foreignId('quiniela_id')->constrained();
+            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('quiniela_id')->constrained()->cascadeOnDelete();
             $table->float('price', 8, 2, true);
             $table->tinyInteger('points');
             $table->timestamps();

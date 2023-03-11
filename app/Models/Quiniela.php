@@ -18,4 +18,9 @@ class Quiniela extends Model
     {
         return $this->belongsToMany(Game::class);
     }
+
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class);
+    }
 }

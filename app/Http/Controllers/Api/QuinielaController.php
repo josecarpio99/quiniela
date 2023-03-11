@@ -29,7 +29,7 @@ class QuinielaController extends ApiController
         $quiniela = Quiniela::create($request->except('games'));
 
         $quiniela->games()->attach(
-            collect($request->games)->map(fn (array $item, int $key) => $item['id'])->all()
+            collect($request->games)->pluck('id')
         );
 
         return new QuinielaResource($quiniela);
@@ -51,6 +51,27 @@ class QuinielaController extends ApiController
     public function update(UpdateQuinielaRequest $request, Quiniela $quiniela)
     {
         $this->authorize('quiniela.update');
+
+        $gameRequestIds = collect($request->games)->pluck('id');
+        if ($quiniela->tickets()->count() > 0) {
+            $quinielaGamesCount = $quiniela->games()->count();
+            if (
+                count($request->games) !== $quinielaGamesCount ||
+                !empty(
+                    $quiniela->games->pluck('id')->diff(
+                        $gameRequestIds
+                    )->all()
+                )
+            ) {
+                return response()->json(['message' => 'Cannot update the games because tickets have already been created.'], 422);
+            }
+        }
+
+        $quiniela->update($request->except('games'));
+
+        $quiniela->games()->sync($gameRequestIds);
+
+        return new QuinielaResource($quiniela);
     }
 
     /**
@@ -59,6 +80,8 @@ class QuinielaController extends ApiController
     public function destroy(Quiniela $quiniela)
     {
         $this->authorize('quiniela.destroy');
+
+        $quiniela->games()->detach();
 
         $quiniela->delete();
 

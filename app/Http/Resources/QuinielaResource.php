@@ -17,6 +17,7 @@ class QuinielaResource extends JsonResource
         return [
             'id' => $this->id,
             'type' => $this->type,
+            'ticket_price' => $this->ticket_price,
             'is_active' => $this->is_active,
             'close_at' => $this->close_at->format('Y-m-d H:i'),
             'prize'   => $this->prize,
