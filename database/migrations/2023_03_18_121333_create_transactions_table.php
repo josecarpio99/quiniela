@@ -21,6 +21,7 @@ return new class extends Migration
             $table->decimal('amount', 8, 2);
             $table->string('status', 20);
             $table->string('rejected_reason')->nullable();
+            $table->date('date');
             $table->timestamps();
         });
     }

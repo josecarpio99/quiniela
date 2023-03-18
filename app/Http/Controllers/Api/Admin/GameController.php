@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Models\Game;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Resources\GameResource;
-use App\Http\Requests\StoreGameRequest;
-use App\Http\Requests\UpdateGameRequest;
+use App\Http\Requests\Admin\StoreGameRequest;
+use App\Http\Requests\Admin\UpdateGameRequest;
 
 class GameController extends ApiController
 {

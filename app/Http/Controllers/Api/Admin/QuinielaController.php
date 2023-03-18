@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Api\ApiController;
 use App\Models\Quiniela;
 use App\Http\Resources\QuinielaResource;
-use App\Http\Requests\StoreQuinielaRequest;
-use App\Http\Requests\UpdateQuinielaRequest;
+use App\Http\Requests\Admin\StoreQuinielaRequest;
+use App\Http\Requests\Admin\UpdateQuinielaRequest;
 
 class QuinielaController extends ApiController
 {

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateTeamRequest extends FormRequest
+class StoreGameRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,11 @@ class UpdateTeamRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required']
+            'home_team'  => ['required', 'exists:teams,id'],
+            'away_team'  => ['required', 'exists:teams,id'],
+            'home_score' => ['integer'],
+            'away_score' => ['integer'],
+            'start_at'   => ['required', 'date_format:Y-m-d H:i']
         ];
     }
 }

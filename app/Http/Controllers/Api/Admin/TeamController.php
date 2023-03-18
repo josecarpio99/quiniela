@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Api\ApiController;
 use App\Models\Team;
-use App\Http\Requests\StoreTeamRequest;
-use App\Http\Requests\UpdateTeamRequest;
+use App\Http\Requests\Admin\StoreTeamRequest;
+use App\Http\Requests\Admin\UpdateTeamRequest;
 use App\Http\Resources\TeamResource;
 
 class TeamController extends ApiController
