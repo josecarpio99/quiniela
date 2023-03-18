@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Admin;
 
+use App\Http\Controllers\Api\ApiController;
 use App\Models\Quiniela;
 use App\Http\Resources\QuinielaResource;
 use App\Http\Requests\StoreQuinielaRequest;
