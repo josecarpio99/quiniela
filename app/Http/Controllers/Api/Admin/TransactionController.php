@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Api\ApiController;
 use App\Models\Transaction;
 use App\Http\Requests\Admin\StoreTransactionRequest;
 use App\Http\Requests\Admin\UpdateTransactionRequest;
 
-class TransactionController extends Controller
+class TransactionController extends ApiController
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $this->authorize('admin.transaction.index');
     }
 
     /**
@@ -22,7 +22,7 @@ class TransactionController extends Controller
      */
     public function store(StoreTransactionRequest $request)
     {
-        //
+        $this->authorize('admin.transaction.store');
     }
 
     /**
@@ -30,7 +30,7 @@ class TransactionController extends Controller
      */
     public function show(Transaction $transaction)
     {
-        //
+        $this->authorize('admin.transaction.show');
     }
 
     /**
@@ -38,7 +38,7 @@ class TransactionController extends Controller
      */
     public function update(UpdateTransactionRequest $request, Transaction $transaction)
     {
-        //
+        $this->authorize('admin.transaction.update');
     }
 
     /**
@@ -46,6 +46,6 @@ class TransactionController extends Controller
      */
     public function destroy(Transaction $transaction)
     {
-        //
+        $this->authorize('admin.transaction.destroy');
     }
 }

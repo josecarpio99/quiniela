@@ -17,7 +17,7 @@ class TeamController extends ApiController
      */
     public function index()
     {
-        $this->authorize('team.index');
+        $this->authorize('admin.team.index');
 
         return TeamResource::collection((Team::paginate(10)));
     }
@@ -30,7 +30,7 @@ class TeamController extends ApiController
      */
     public function store(StoreTeamRequest $request)
     {
-        $this->authorize('team.store');
+        $this->authorize('admin.team.store');
 
         $team = Team::create($request->validated());
 
@@ -45,7 +45,7 @@ class TeamController extends ApiController
      */
     public function show(Team $team)
     {
-        $this->authorize('team.show');
+        $this->authorize('admin.team.show');
 
         return new TeamResource($team);
     }
@@ -59,7 +59,7 @@ class TeamController extends ApiController
      */
     public function update(UpdateTeamRequest $request, Team $team)
     {
-        $this->authorize('team.update');
+        $this->authorize('admin.team.update');
 
         $team->update($request->validated());
 
@@ -74,7 +74,7 @@ class TeamController extends ApiController
      */
     public function destroy(Team $team)
     {
-        $this->authorize('team.destroy');
+        $this->authorize('admin.team.destroy');
 
         $team->delete();
 

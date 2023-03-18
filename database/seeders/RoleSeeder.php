@@ -20,24 +20,31 @@ class RoleSeeder extends Seeder
         Role::create(['name' => 'Client']);
 
         // Team permissions
-        Permission::create(['name' => 'team.index']);
-        Permission::create(['name' => 'team.store']);
-        Permission::create(['name' => 'team.show']);
-        Permission::create(['name' => 'team.update']);
-        Permission::create(['name' => 'team.destroy']);
+        Permission::create(['name' => 'admin.team.index']);
+        Permission::create(['name' => 'admin.team.store']);
+        Permission::create(['name' => 'admin.team.show']);
+        Permission::create(['name' => 'admin.team.update']);
+        Permission::create(['name' => 'admin.team.destroy']);
 
         // Game permissions
-        Permission::create(['name' => 'game.index']);
-        Permission::create(['name' => 'game.store']);
-        Permission::create(['name' => 'game.show']);
-        Permission::create(['name' => 'game.update']);
-        Permission::create(['name' => 'game.destroy']);
+        Permission::create(['name' => 'admin.game.index']);
+        Permission::create(['name' => 'admin.game.store']);
+        Permission::create(['name' => 'admin.game.show']);
+        Permission::create(['name' => 'admin.game.update']);
+        Permission::create(['name' => 'admin.game.destroy']);
 
         // Quiniela permissions
-        Permission::create(['name' => 'quiniela.index']);
-        Permission::create(['name' => 'quiniela.store']);
-        Permission::create(['name' => 'quiniela.show']);
-        Permission::create(['name' => 'quiniela.update']);
-        Permission::create(['name' => 'quiniela.destroy']);
+        Permission::create(['name' => 'admin.quiniela.index']);
+        Permission::create(['name' => 'admin.quiniela.store']);
+        Permission::create(['name' => 'admin.quiniela.show']);
+        Permission::create(['name' => 'admin.quiniela.update']);
+        Permission::create(['name' => 'admin.quiniela.destroy']);
+
+        // Transaction permissions
+        Permission::create(['name' => 'admin.transaction.index']);
+        Permission::create(['name' => 'admin.transaction.store']);
+        Permission::create(['name' => 'admin.transaction.show']);
+        Permission::create(['name' => 'admin.transaction.update']);
+        Permission::create(['name' => 'admin.transaction.destroy']);
     }
 }

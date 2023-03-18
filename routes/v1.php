@@ -10,7 +10,7 @@ Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login'])->name('login');
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::prefix('admin')->group(function () {
+    Route::prefix('admin')->name('admin.')->group(function () {
         Route::apiResource('game', GameController::class);
         Route::apiResource('team', TeamController::class);
         Route::apiResource('quiniela', QuinielaController::class);
