@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\TransactionStatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,11 +16,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
-            $table->enum('type', ['deposit', 'withdraw'])->index();
+            $table->string('type')->index();
             $table->string('payment_method', 30)->nullable();
             $table->string('payment_reference')->nullable();
             $table->decimal('amount', 8, 2);
-            $table->string('status', 20);
+            $table->string('status')->default(TransactionStatusEnum::Pending->value);
             $table->string('rejected_reason')->nullable();
             $table->date('date');
             $table->timestamps();

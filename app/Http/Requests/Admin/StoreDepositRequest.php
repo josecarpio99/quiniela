@@ -2,16 +2,18 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Enums\TransactionTypeEnum;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
-class UpdateTransactionRequest extends FormRequest
+class StoreDepositRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +24,11 @@ class UpdateTransactionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'user_id' => ['required', 'exists:users,id'],
+            'amount' => ['required', 'regex:/^\d+(\.\d{1,2})?$/'],
+            'date'   => ['required', 'date_format:Y-m-d'],
+            'payment_method' => ['required'],
+            'payment_reference' => ['required']
         ];
     }
 }

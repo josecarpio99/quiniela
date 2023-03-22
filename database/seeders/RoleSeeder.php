@@ -40,11 +40,18 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'admin.quiniela.update']);
         Permission::create(['name' => 'admin.quiniela.destroy']);
 
-        // Transaction permissions
-        Permission::create(['name' => 'admin.transaction.index']);
-        Permission::create(['name' => 'admin.transaction.store']);
-        Permission::create(['name' => 'admin.transaction.show']);
-        Permission::create(['name' => 'admin.transaction.update']);
-        Permission::create(['name' => 'admin.transaction.destroy']);
+        // Deposit permissions
+        Permission::create(['name' => 'admin.deposit.index']);
+        Permission::create(['name' => 'admin.deposit.store']);
+        Permission::create(['name' => 'admin.deposit.show']);
+        Permission::create(['name' => 'admin.deposit.update']);
+        Permission::create(['name' => 'admin.deposit.destroy']);
+
+        // Withdraw permissions
+        Permission::create(['name' => 'admin.withdraw.index']);
+        Permission::create(['name' => 'admin.withdraw.store']);
+        Permission::create(['name' => 'admin.withdraw.show']);
+        Permission::create(['name' => 'admin.withdraw.update']);
+        Permission::create(['name' => 'admin.withdraw.destroy']);
     }
 }
