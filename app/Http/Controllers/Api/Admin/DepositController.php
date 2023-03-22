@@ -50,6 +50,8 @@ class DepositController extends ApiController
     public function show(Transaction $transaction)
     {
         $this->authorize('admin.deposit.show');
+
+        return new TransactionResource($transaction);
     }
 
     /**
@@ -58,6 +60,10 @@ class DepositController extends ApiController
     public function update(UpdateDepositRequest $request, Transaction $transaction)
     {
         $this->authorize('admin.deposit.update');
+
+        $transaction->update($request->validated());
+
+        return new TransactionResource($transaction);
     }
 
     /**
@@ -66,5 +72,9 @@ class DepositController extends ApiController
     public function destroy(Transaction $transaction)
     {
         $this->authorize('admin.deposit.destroy');
+
+        $transaction->delete();
+
+        return $this->noContent();
     }
 }
