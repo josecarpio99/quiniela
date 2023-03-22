@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
+use App\Models\User;
 use App\Models\Transaction;
 use App\Enums\TransactionTypeEnum;
 use App\Enums\TransactionStatusEnum;
 use App\Http\Controllers\Api\ApiController;
+use App\Http\Resources\TransactionResource;
 use App\Http\Requests\Admin\StoreDepositRequest;
 use App\Http\Requests\Admin\UpdateDepositRequest;
-use App\Http\Resources\TransactionResource;
 
 class DepositController extends ApiController
 {
@@ -32,14 +33,16 @@ class DepositController extends ApiController
         $this->authorize('admin.deposit.store');
 
         $transaction = auth()->user()->transactionsCreated()->create(
-            $request->validated() +
+            $request->except('update_user_balance') +
             [
                 'type' => TransactionTypeEnum::Deposit->value,
                 'status' => TransactionStatusEnum::Approved->value
             ]
         );
 
-        $transaction->user()->increment('balance', $request->amount);
+        if ($request->update_user_balance) {
+            $transaction->user()->increment('balance', $request->amount);
+        }
 
         return new TransactionResource($transaction);
     }
@@ -61,7 +64,25 @@ class DepositController extends ApiController
     {
         $this->authorize('admin.deposit.update');
 
-        $transaction->update($request->validated());
+        $prevTransaction = $transaction->replicate();
+        $transaction->update($request->except('update_user_balance'));
+
+        if ($request->update_user_balance) {
+
+            if ($prevTransaction->user_id !== $transaction->user_id) {
+
+                $prevTransaction->user()->decrement('balance', $transaction->getOriginal('amount'));
+                $transaction->user()->increment('balance', $transaction->amount);
+
+            } else {
+
+                if ($prevTransaction->amount !== $transaction->amount) {
+                    $newBalance = ( $transaction->user->balance - $prevTransaction->amount ) + $transaction->amount;
+                    $transaction->user()->update(['balance' => $newBalance]);
+                }
+
+            }
+        }
 
         return new TransactionResource($transaction);
     }

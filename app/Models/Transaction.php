@@ -10,7 +10,8 @@ class Transaction extends Model
     use HasFactory;
 
     protected $casts = [
-        'date' => 'datetime'
+        'amount' => 'float',
+        'date'   => 'datetime'
     ];
 
     public function user()
