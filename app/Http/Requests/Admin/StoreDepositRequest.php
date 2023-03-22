@@ -24,7 +24,6 @@ class StoreDepositRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => ['required', 'exists:users,id'],
             'amount' => ['required', 'regex:/^\d+(\.\d{1,2})?$/'],
             'date'   => ['required', 'date_format:Y-m-d'],
             'payment_method' => ['required'],

@@ -11,7 +11,7 @@ class UpdateDepositRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user->id === $this->transaction->user_id;
     }
 
     /**
@@ -22,7 +22,6 @@ class UpdateDepositRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => ['required', 'exists:users,id'],
             'amount' => ['required', 'regex:/^\d+(\.\d{1,2})?$/'],
             'date'   => ['required', 'date_format:Y-m-d'],
             'payment_method' => ['required'],

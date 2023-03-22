@@ -28,13 +28,14 @@ class DepositController extends ApiController
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreDepositRequest $request)
+    public function store(StoreDepositRequest $request, User $user)
     {
         $this->authorize('admin.deposit.store');
 
         $transaction = auth()->user()->transactionsCreated()->create(
             $request->except('update_user_balance') +
             [
+                'user_id' => $user->id,
                 'type' => TransactionTypeEnum::Deposit->value,
                 'status' => TransactionStatusEnum::Approved->value
             ]
@@ -50,7 +51,7 @@ class DepositController extends ApiController
     /**
      * Display the specified resource.
      */
-    public function show(Transaction $transaction)
+    public function show(User $user, Transaction $transaction)
     {
         $this->authorize('admin.deposit.show');
 
@@ -60,7 +61,7 @@ class DepositController extends ApiController
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateDepositRequest $request, Transaction $transaction)
+    public function update(UpdateDepositRequest $request, User $user, Transaction $transaction)
     {
         $this->authorize('admin.deposit.update');
 
@@ -68,20 +69,8 @@ class DepositController extends ApiController
         $transaction->update($request->except('update_user_balance'));
 
         if ($request->update_user_balance) {
-
-            if ($prevTransaction->user_id !== $transaction->user_id) {
-
-                $prevTransaction->user()->decrement('balance', $transaction->getOriginal('amount'));
-                $transaction->user()->increment('balance', $transaction->amount);
-
-            } else {
-
-                if ($prevTransaction->amount !== $transaction->amount) {
-                    $newBalance = ( $transaction->user->balance - $prevTransaction->amount ) + $transaction->amount;
-                    $transaction->user()->update(['balance' => $newBalance]);
-                }
-
-            }
+            $newBalance = ( $transaction->user->balance - $prevTransaction->amount ) + $transaction->amount;
+            $transaction->user()->update(['balance' => $newBalance]);
         }
 
         return new TransactionResource($transaction);
@@ -90,7 +79,7 @@ class DepositController extends ApiController
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Transaction $transaction)
+    public function destroy(User $user, Transaction $transaction)
     {
         $this->authorize('admin.deposit.destroy');
 

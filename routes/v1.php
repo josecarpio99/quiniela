@@ -16,9 +16,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('team', TeamController::class);
         Route::apiResource('quiniela', QuinielaController::class);
 
-        Route::apiResource('deposit', DepositController::class)->except('show', 'update', 'destroy');
-        Route::get('deposit/{transaction}', [DepositController::class, 'show'])->name('deposit.show');
-        Route::put('deposit/{transaction}', [DepositController::class, 'update'])->name('deposit.update');
-        Route::delete('deposit/{transaction}', [DepositController::class, 'destroy'])->name('deposit.destroy');
+        Route::get('deposit/{transaction}', [DepositController::class, 'index'])->name('deposit.index');
+        Route::get('user/{user}/deposit/{transaction}', [DepositController::class, 'show'])->name('deposit.show');
+        Route::post('user/{user}/deposit', [DepositController::class, 'store'])->name('deposit.store');
+        Route::put('user/{user}/deposit/{transaction}', [DepositController::class, 'update'])->name('deposit.update');
+        Route::delete('user/{user}/deposit/{transaction}', [DepositController::class, 'destroy'])->name('deposit.destroy');
     });
 });
