@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Models\User;
 use App\Models\Transaction;
+use Illuminate\Http\Request;
 use App\Enums\TransactionTypeEnum;
 use App\Enums\TransactionStatusEnum;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Resources\TransactionResource;
 use App\Http\Requests\Admin\StoreDepositRequest;
@@ -79,9 +81,21 @@ class DepositController extends ApiController
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user, Transaction $transaction)
+    public function destroy(Request $request, User $user, Transaction $transaction)
     {
         $this->authorize('admin.deposit.destroy');
+
+        $validator = Validator::make($request->all(), [
+            'update_user_balance' => ['required', 'boolean']
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->messages()], 422);
+        }
+
+        if ($request->update_user_balance) {
+            $transaction->user()->decrement('balance', $transaction->amount);
+        }
 
         $transaction->delete();
 
