@@ -24,7 +24,7 @@ class UpdateDepositRequest extends FormRequest
         return [
             'amount' => ['required', 'regex:/^\d+(\.\d{1,2})?$/'],
             'date'   => ['required', 'date_format:Y-m-d'],
-            'payment_method' => ['required'],
+            'payment_method' => ['required', 'integer', 'exists:payment_methods,id'],
             'payment_reference' => ['required'],
             'update_user_balance' => ['required', 'boolean']
         ];
