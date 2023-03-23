@@ -10,6 +10,7 @@ use App\Http\Resources\TransactionResource;
 use App\Http\Requests\Admin\StoreDepositRequest;
 use App\Http\Requests\Admin\UpdateDepositRequest;
 use App\Http\Requests\Admin\DestroyDepositRequest;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DepositController extends ApiController
 {

@@ -2,11 +2,14 @@
 
 namespace App\Providers;
 
-use Illuminate\Cache\RateLimiting\Limit;
-use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use App\Models\Transaction;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\RateLimiter;
+use App\Enums\TransactionTypeEnum;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -35,6 +38,14 @@ class RouteServiceProvider extends ServiceProvider
 
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
+        });
+
+        Route::bind('deposit', function (string $value) {
+            return Transaction::where('id', $value)->fromDeposits()->firstOrFail();
+        });
+
+        Route::bind('withdraw', function (string $value) {
+            return Transaction::where('id', $value)->fromWithdraws()->firstOrFail();
         });
     }
 
