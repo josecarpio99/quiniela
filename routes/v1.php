@@ -9,6 +9,8 @@ use App\Http\Controllers\Api\Admin\DepositController;
 use App\Http\Controllers\Api\Admin\QuinielaController;
 use App\Http\Controllers\Api\Admin\WithdrawController;
 use App\Http\Controllers\Api\Admin\PaymentMethodController;
+use App\Http\Controllers\Api\Admin\ChangeDepositStatusController;
+use App\Http\Controllers\Api\Admin\ChangeWithdrawStatusController;
 
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login'])->name('login');
@@ -25,5 +27,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::scopeBindings()->group(function() {
             Route::apiResource('quiniela.ticket', TicketController::class);
         });
+
+        Route::post('deposit/{deposit}/status', ChangeDepositStatusController::class);
+        Route::post('withdraw/{withdraw}/status', ChangeWithdrawStatusController::class);
     });
 });
