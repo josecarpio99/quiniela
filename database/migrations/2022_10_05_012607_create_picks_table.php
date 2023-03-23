@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('picks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('ticket_id')->constrained();
+            $table->foreignId('ticket_id')->constrained()->cascadeOnDelete();
             $table->foreignId('game_id')->constrained();
             $table->tinyInteger('home_score')->nullable();
             $table->tinyInteger('away_score')->nullable();

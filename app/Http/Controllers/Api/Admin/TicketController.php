@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
-use App\Http\Controllers\Api\ApiController;
+use App\Models\User;
 use App\Models\Ticket;
+use App\Models\Quiniela;
+use App\Http\Resources\TicketResource;
+use App\Http\Controllers\Api\ApiController;
 use App\Http\Requests\Admin\StoreTicketRequest;
 use App\Http\Requests\Admin\UpdateTicketRequest;
-use App\Http\Resources\TicketResource;
-use App\Models\Quiniela;
 
 class TicketController extends ApiController
 {
@@ -33,14 +34,20 @@ class TicketController extends ApiController
     {
         $this->authorize('admin.ticket.store');
 
-        // Check if games belongs to quiniela
+        $user = User::find($request->user_id);
+
+        if (! $quiniela->is_active || now()->gt($quiniela->close_at)) {
+            return $this->error('Quiniela is inactive or already closed');
+        }
+
+        if ($user->balance < $quiniela->ticket_price) {
+            return $this->error('insufficient user funds');
+        }
+
         if (
-            array_diff(
-                $quiniela->games->pluck('id'),
-                collect($request->picks)->pluck('id')
-            )
+            ! $quiniela->gamesMatch(collect($request->picks)->pluck('game_id')->all())
         ) {
-            abort(400, 'Game/s dont belong to quiniela');
+            return $this->error('Game/s dont belong to quiniela');
         }
 
         $ticket = $quiniela->tickets()->create([
@@ -50,6 +57,8 @@ class TicketController extends ApiController
         ]);
 
         $ticket->picks()->createMany($request->picks);
+
+        $user->decrement('balance', $quiniela->ticket_price);
 
         return new TicketResource($ticket);
     }

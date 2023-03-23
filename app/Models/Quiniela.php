@@ -23,4 +23,9 @@ class Quiniela extends Model
     {
         return $this->hasMany(Ticket::class);
     }
+
+    public function gamesMatch(array $gameIds) : bool
+    {
+        return $this->games->pluck('id')->sort()->join('') === collect($gameIds)->sort()->join('');
+    }
 }

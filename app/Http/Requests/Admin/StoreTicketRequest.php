@@ -26,7 +26,7 @@ class StoreTicketRequest extends FormRequest
         return [
             'user_id' => ['required', 'integer', 'exists:users,id'],
             'picks'   => ['required', 'array'],
-            'picks.*.game_id' => ['required'],
+            'picks.*.game_id' => ['required', 'exists:games,id'],
             'picks.*.home_score' => ['required'],
             'picks.*.away_score' => ['required'],
         ];

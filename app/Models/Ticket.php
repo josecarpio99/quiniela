@@ -18,4 +18,9 @@ class Ticket extends Model
     {
         return $this->belongsTo(Quiniela::class);
     }
+
+    public function picks()
+    {
+        return $this->hasMany(Pick::class);
+    }
 }
