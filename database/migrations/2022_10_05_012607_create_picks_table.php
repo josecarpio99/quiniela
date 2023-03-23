@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('game_id')->constrained();
             $table->tinyInteger('home_score')->nullable();
             $table->tinyInteger('away_score')->nullable();
-            $table->tinyInteger('pick_result', [1, 2, 3])->nullable();
+            $table->tinyInteger('pick_result')->nullable();
             $table->tinyInteger('points')->nullable();
             $table->timestamps();
         });
