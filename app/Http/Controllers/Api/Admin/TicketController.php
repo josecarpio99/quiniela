@@ -10,6 +10,7 @@ use App\Http\Resources\TicketResource;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Requests\Admin\StoreTicketRequest;
 use App\Http\Requests\Admin\UpdateTicketRequest;
+use App\Http\Requests\Admin\DestroyTicketRequest;
 
 class TicketController extends ApiController
 {
@@ -105,9 +106,13 @@ class TicketController extends ApiController
      * @param  \App\Models\Ticket  $ticket
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Quiniela $quiniela, Ticket $ticket)
+    public function destroy(DestroyTicketRequest $request, Quiniela $quiniela, Ticket $ticket)
     {
         $this->authorize('admin.ticket.destroy');
+
+        if ($request->update_user_balance) {
+            $ticket->user()->increment('balance', $ticket->price);
+        }
 
         $ticket->delete();
 
