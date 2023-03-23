@@ -24,7 +24,10 @@ class UpdateTicketRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required']
+            'picks'   => ['required', 'array'],
+            'picks.*.id' => ['required', 'exists:picks,id,ticket_id,' . $this->ticket->id],
+            'picks.*.home_score' => ['required'],
+            'picks.*.away_score' => ['required'],
         ];
     }
 }

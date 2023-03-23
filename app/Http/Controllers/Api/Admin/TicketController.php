@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
+use App\Models\Pick;
 use App\Models\User;
 use App\Models\Ticket;
 use App\Models\Quiniela;
@@ -87,7 +88,13 @@ class TicketController extends ApiController
     {
         $this->authorize('admin.ticket.update');
 
-        $ticket->update($request->validated());
+        if (! $quiniela->is_active || now()->gt($quiniela->close_at)) {
+            return $this->error('Quiniela is inactive or already closed');
+        }
+
+        foreach ($request->picks as $pick) {
+            Pick::where('id', $pick['id'])->update($pick);
+        }
 
         return new TicketResource($ticket);
     }
