@@ -17,16 +17,14 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('team', TeamController::class);
         Route::apiResource('quiniela', QuinielaController::class);
 
-        Route::get('deposit', [DepositController::class, 'index'])->name('deposit.index');
-        Route::get('user/{user}/deposit/{transaction}', [DepositController::class, 'show'])->name('deposit.show');
-        Route::post('user/{user}/deposit', [DepositController::class, 'store'])->name('deposit.store');
-        Route::put('user/{user}/deposit/{transaction}', [DepositController::class, 'update'])->name('deposit.update');
-        Route::delete('user/{user}/deposit/{transaction}', [DepositController::class, 'destroy'])->name('deposit.destroy');
+        Route::apiResource('deposit', DepositController::class)->except('show', 'update', 'destroy');
+        Route::get('deposit/{transaction}', [DepositController::class, 'show'])->name('deposit.show');
+        Route::put('deposit/{transaction}', [DepositController::class, 'update'])->name('deposit.update');
+        Route::delete('deposit/{transaction}', [DepositController::class, 'destroy'])->name('deposit.destroy');
 
-        Route::get('withdraw', [WithdrawController::class, 'index'])->name('withdraw.index');
-        Route::get('user/{user}/withdraw/{transaction}', [WithdrawController::class, 'show'])->name('withdraw.show');
-        Route::post('user/{user}/withdraw', [WithdrawController::class, 'store'])->name('withdraw.store');
-        Route::put('user/{user}/withdraw/{transaction}', [WithdrawController::class, 'update'])->name('withdraw.update');
-        Route::delete('user/{user}/withdraw/{transaction}', [WithdrawController::class, 'destroy'])->name('withdraw.destroy');
+        Route::apiResource('withdraw', WithdrawController::class)->except('show', 'update', 'destroy');
+        Route::get('withdraw/{transaction}', [WithdrawController::class, 'show'])->name('withdraw.show');
+        Route::put('withdraw/{transaction}', [WithdrawController::class, 'update'])->name('withdraw.update');
+        Route::delete('withdraw/{transaction}', [WithdrawController::class, 'destroy'])->name('withdraw.destroy');
     });
 });

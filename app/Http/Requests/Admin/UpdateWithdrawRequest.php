@@ -11,7 +11,7 @@ class UpdateWithdrawRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user->id === $this->transaction->user_id;
+        return true;
     }
 
     /**

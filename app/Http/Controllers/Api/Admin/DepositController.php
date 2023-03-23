@@ -2,16 +2,14 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
-use App\Models\User;
 use App\Models\Transaction;
-use Illuminate\Http\Request;
 use App\Enums\TransactionTypeEnum;
 use App\Enums\TransactionStatusEnum;
-use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Resources\TransactionResource;
 use App\Http\Requests\Admin\StoreDepositRequest;
 use App\Http\Requests\Admin\UpdateDepositRequest;
+use App\Http\Requests\Admin\DestroyDepositRequest;
 
 class DepositController extends ApiController
 {
@@ -30,14 +28,13 @@ class DepositController extends ApiController
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreDepositRequest $request, User $user)
+    public function store(StoreDepositRequest $request)
     {
         $this->authorize('admin.deposit.store');
 
         $transaction = auth()->user()->transactionsCreated()->create(
             $request->except('update_user_balance') +
             [
-                'user_id' => $user->id,
                 'type' => TransactionTypeEnum::Deposit->value,
                 'status' => TransactionStatusEnum::Approved->value
             ]
@@ -53,7 +50,7 @@ class DepositController extends ApiController
     /**
      * Display the specified resource.
      */
-    public function show(User $user, Transaction $transaction)
+    public function show(Transaction $transaction)
     {
         $this->authorize('admin.deposit.show');
 
@@ -63,7 +60,7 @@ class DepositController extends ApiController
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateDepositRequest $request, User $user, Transaction $transaction)
+    public function update(UpdateDepositRequest $request, Transaction $transaction)
     {
         $this->authorize('admin.deposit.update');
 
@@ -81,17 +78,9 @@ class DepositController extends ApiController
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, User $user, Transaction $transaction)
+    public function destroy(DestroyDepositRequest $request, Transaction $transaction)
     {
         $this->authorize('admin.deposit.destroy');
-
-        $validator = Validator::make($request->all(), [
-            'update_user_balance' => ['required', 'boolean']
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->messages()], 422);
-        }
 
         if ($request->update_user_balance) {
             $transaction->user()->decrement('balance', $transaction->amount);

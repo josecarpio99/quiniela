@@ -4,7 +4,7 @@ namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreWithdrawRequest extends FormRequest
+class DestroyDepositRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,11 +22,6 @@ class StoreWithdrawRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => ['required', 'exists:users,id'],
-            'amount' => ['required', 'regex:/^\d+(\.\d{1,2})?$/'],
-            'date'   => ['required', 'date_format:Y-m-d'],
-            'payment_method' => ['required'],
-            'payment_reference' => ['required'],
             'update_user_balance' => ['required', 'boolean']
         ];
     }

@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
-use App\Models\User;
 use App\Models\Transaction;
-use Illuminate\Http\Request;
 use App\Enums\TransactionTypeEnum;
 use App\Enums\TransactionStatusEnum;
 use Illuminate\Support\Facades\Validator;
@@ -12,6 +10,7 @@ use App\Http\Controllers\Api\ApiController;
 use App\Http\Resources\TransactionResource;
 use App\Http\Requests\Admin\StoreWithdrawRequest;
 use App\Http\Requests\Admin\UpdateWithdrawRequest;
+use App\Http\Requests\Admin\DestroyWithdrawRequest;
 
 class WithdrawController extends ApiController
 {
@@ -30,14 +29,13 @@ class WithdrawController extends ApiController
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreWithdrawRequest $request, User $user)
+    public function store(StoreWithdrawRequest $request)
     {
         $this->authorize('admin.withdraw.store');
 
         $transaction = auth()->user()->transactionsCreated()->create(
             $request->except('update_user_balance') +
             [
-                'user_id' => $user->id,
                 'type' => TransactionTypeEnum::Withdraw->value,
                 'status' => TransactionStatusEnum::Approved->value
             ]
@@ -53,7 +51,7 @@ class WithdrawController extends ApiController
     /**
      * Display the specified resource.
      */
-    public function show(User $user, Transaction $transaction)
+    public function show(Transaction $transaction)
     {
         $this->authorize('admin.withdraw.show');
 
@@ -63,7 +61,7 @@ class WithdrawController extends ApiController
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateWithdrawRequest $request, User $user, Transaction $transaction)
+    public function update(UpdateWithdrawRequest $request, Transaction $transaction)
     {
         $this->authorize('admin.withdraw.update');
 
@@ -81,17 +79,9 @@ class WithdrawController extends ApiController
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, User $user, Transaction $transaction)
+    public function destroy(DestroyWithdrawRequest $request, Transaction $transaction)
     {
         $this->authorize('admin.withdraw.destroy');
-
-        $validator = Validator::make($request->all(), [
-            'update_user_balance' => ['required', 'boolean']
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->messages()], 422);
-        }
 
         if ($request->update_user_balance) {
             $transaction->user()->increment('balance', $transaction->amount);
