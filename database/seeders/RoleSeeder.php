@@ -53,5 +53,12 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'admin.withdraw.show']);
         Permission::create(['name' => 'admin.withdraw.update']);
         Permission::create(['name' => 'admin.withdraw.destroy']);
+
+        // Payment Method permissions
+        Permission::create(['name' => 'admin.payment_method.index']);
+        Permission::create(['name' => 'admin.payment_method.store']);
+        Permission::create(['name' => 'admin.payment_method.show']);
+        Permission::create(['name' => 'admin.payment_method.update']);
+        Permission::create(['name' => 'admin.payment_method.destroy']);
     }
 }

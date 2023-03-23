@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->string('type')->index();
-            $table->string('payment_method', 30)->nullable();
+            $table->foreignId('payment_method')->nullable()->constrained('payment_methods')->nullOnDelete();
             $table->string('payment_reference')->nullable();
             $table->decimal('amount', 8, 2);
             $table->string('status')->default(TransactionStatusEnum::Pending->value);
