@@ -7,6 +7,7 @@ use App\Models\Ticket;
 use App\Http\Requests\Admin\StoreTicketRequest;
 use App\Http\Requests\Admin\UpdateTicketRequest;
 use App\Http\Resources\TicketResource;
+use App\Models\Quiniela;
 
 class TicketController extends ApiController
 {
@@ -15,7 +16,7 @@ class TicketController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Quiniela $quiniela)
     {
         $this->authorize('admin.ticket.index');
 
@@ -28,11 +29,27 @@ class TicketController extends ApiController
      * @param  \App\Http\Requests\StoreTicketRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreTicketRequest $request)
+    public function store(StoreTicketRequest $request, Quiniela $quiniela)
     {
         $this->authorize('admin.ticket.store');
 
-        $ticket = Ticket::create($request->validated());
+        // Check if games belongs to quiniela
+        if (
+            array_diff(
+                $quiniela->games->pluck('id'),
+                collect($request->picks)->pluck('id')
+            )
+        ) {
+            abort(400, 'Game/s dont belong to quiniela');
+        }
+
+        $ticket = $quiniela->tickets()->create([
+            'user_id' => $request->user_id,
+            'created_by' => auth()->user()->id,
+            'price' => $quiniela->ticket_price,
+        ]);
+
+        $ticket->picks()->createMany($request->picks);
 
         return new TicketResource($ticket);
     }
@@ -43,7 +60,7 @@ class TicketController extends ApiController
      * @param  \App\Models\Ticket  $ticket
      * @return \Illuminate\Http\Response
      */
-    public function show(Ticket $ticket)
+    public function show(Quiniela $quiniela, Ticket $ticket)
     {
         $this->authorize('admin.ticket.show');
 
@@ -57,7 +74,7 @@ class TicketController extends ApiController
      * @param  \App\Models\Ticket  $ticket
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateTicketRequest $request, Ticket $ticket)
+    public function update(UpdateTicketRequest $request, Quiniela $quiniela, Ticket $ticket)
     {
         $this->authorize('admin.ticket.update');
 
@@ -72,7 +89,7 @@ class TicketController extends ApiController
      * @param  \App\Models\Ticket  $ticket
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Ticket $ticket)
+    public function destroy(Quiniela $quiniela, Ticket $ticket)
     {
         $this->authorize('admin.ticket.destroy');
 

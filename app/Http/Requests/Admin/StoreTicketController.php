@@ -24,7 +24,11 @@ class StoreTicketRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required']
+            'user_id' => ['required', 'integer', 'exists:users,id'],
+            'picks'   => ['required', 'array'],
+            'picks.*.game_id' => ['required'],
+            'picks.*.home_score' => ['required'],
+            'picks.*.away_score' => ['required'],
         ];
     }
 }

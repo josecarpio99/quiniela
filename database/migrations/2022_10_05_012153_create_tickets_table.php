@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('quiniela_id')->constrained()->cascadeOnDelete();
             $table->float('price', 8, 2, true);
-            $table->tinyInteger('points');
+            $table->tinyInteger('points')->nullable();
             $table->timestamps();
         });
     }

@@ -18,9 +18,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('game', GameController::class);
         Route::apiResource('team', TeamController::class);
         Route::apiResource('quiniela', QuinielaController::class);
-        Route::apiResource('ticket', TicketController::class);
         Route::apiResource('deposit', DepositController::class);
         Route::apiResource('withdraw', WithdrawController::class);
         Route::apiResource('payment_method', PaymentMethodController::class);
+
+        Route::scopeBindings()->group(function() {
+            Route::apiResource('quiniela.ticket', TicketController::class);
+        });
     });
 });

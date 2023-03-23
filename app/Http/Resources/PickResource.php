@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TicketResource extends JsonResource
+class PickResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,12 +16,10 @@ class TicketResource extends JsonResource
     {
         return [
             'id' =>  $this->id,
-            'user_id' =>  $this->user_id,
-            'created_by' =>  $this->created_by,
-            'quiniela_id' =>  $this->quiniela_id,
-            'price' => $this->price,
-            'points' => $this->points,
-            'picks' => PickResource::collection($this->picks)
+            'game_id' =>  $this->game_id,
+            'home_score' =>  $this->home_score,
+            'away_score' =>  $this->away_score,
+            'points' =>  $this->points,
         ];
     }
 }
