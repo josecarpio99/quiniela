@@ -17,7 +17,7 @@ class PaymentMethodController extends ApiController
      */
     public function index()
     {
-        $this->authorize('admin.payment_method.index');
+        $this->authorize('payment_method.index');
 
         return PaymentMethodResource::collection((PaymentMethod::paginate(10)));
     }
@@ -30,7 +30,7 @@ class PaymentMethodController extends ApiController
      */
     public function store(StorePaymentMethodRequest $request)
     {
-        $this->authorize('admin.payment_method.store');
+        $this->authorize('payment_method.store');
 
         $paymentMethod = PaymentMethod::create($request->validated());
 
@@ -45,7 +45,7 @@ class PaymentMethodController extends ApiController
      */
     public function show(PaymentMethod $paymentMethod)
     {
-        $this->authorize('admin.payment_method.show');
+        $this->authorize('payment_method.show');
 
         return new PaymentMethodResource($paymentMethod);
     }
@@ -59,7 +59,7 @@ class PaymentMethodController extends ApiController
      */
     public function update(UpdatePaymentMethodRequest $request, PaymentMethod $paymentMethod)
     {
-        $this->authorize('admin.payment_method.update');
+        $this->authorize('payment_method.update');
 
         $paymentMethod->update($request->validated());
 
@@ -74,7 +74,7 @@ class PaymentMethodController extends ApiController
      */
     public function destroy(PaymentMethod $paymentMethod)
     {
-        $this->authorize('admin.payment_method.destroy');
+        $this->authorize('payment_method.destroy');
 
         $paymentMethod->delete();
 

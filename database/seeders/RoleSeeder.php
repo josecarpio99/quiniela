@@ -20,54 +20,54 @@ class RoleSeeder extends Seeder
         Role::create(['name' => 'Client']);
 
         // Team permissions
-        Permission::create(['name' => 'admin.team.index']);
-        Permission::create(['name' => 'admin.team.store']);
-        Permission::create(['name' => 'admin.team.show']);
-        Permission::create(['name' => 'admin.team.update']);
-        Permission::create(['name' => 'admin.team.destroy']);
+        Permission::create(['name' => 'team.index']);
+        Permission::create(['name' => 'team.store']);
+        Permission::create(['name' => 'team.show']);
+        Permission::create(['name' => 'team.update']);
+        Permission::create(['name' => 'team.destroy']);
 
         // Game permissions
-        Permission::create(['name' => 'admin.game.index']);
-        Permission::create(['name' => 'admin.game.store']);
-        Permission::create(['name' => 'admin.game.show']);
-        Permission::create(['name' => 'admin.game.update']);
-        Permission::create(['name' => 'admin.game.destroy']);
+        Permission::create(['name' => 'game.index']);
+        Permission::create(['name' => 'game.store']);
+        Permission::create(['name' => 'game.show']);
+        Permission::create(['name' => 'game.update']);
+        Permission::create(['name' => 'game.destroy']);
 
         // Quiniela permissions
-        Permission::create(['name' => 'admin.quiniela.index']);
-        Permission::create(['name' => 'admin.quiniela.store']);
-        Permission::create(['name' => 'admin.quiniela.show']);
-        Permission::create(['name' => 'admin.quiniela.update']);
-        Permission::create(['name' => 'admin.quiniela.destroy']);
+        Permission::create(['name' => 'quiniela.index']);
+        Permission::create(['name' => 'quiniela.store']);
+        Permission::create(['name' => 'quiniela.show']);
+        Permission::create(['name' => 'quiniela.update']);
+        Permission::create(['name' => 'quiniela.destroy']);
 
         // Deposit permissions
-        Permission::create(['name' => 'admin.deposit.index']);
-        Permission::create(['name' => 'admin.deposit.store']);
-        Permission::create(['name' => 'admin.deposit.show']);
-        Permission::create(['name' => 'admin.deposit.update']);
-        Permission::create(['name' => 'admin.deposit.destroy']);
-        Permission::create(['name' => 'admin.deposit.change_status']);
+        Permission::create(['name' => 'deposit.index']);
+        Permission::create(['name' => 'deposit.store']);
+        Permission::create(['name' => 'deposit.show']);
+        Permission::create(['name' => 'deposit.update']);
+        Permission::create(['name' => 'deposit.destroy']);
+        Permission::create(['name' => 'deposit.change_status']);
 
         // Withdraw permissions
-        Permission::create(['name' => 'admin.withdraw.index']);
-        Permission::create(['name' => 'admin.withdraw.store']);
-        Permission::create(['name' => 'admin.withdraw.show']);
-        Permission::create(['name' => 'admin.withdraw.update']);
-        Permission::create(['name' => 'admin.withdraw.destroy']);
-        Permission::create(['name' => 'admin.withdraw.change_status']);
+        Permission::create(['name' => 'withdraw.index']);
+        Permission::create(['name' => 'withdraw.store']);
+        Permission::create(['name' => 'withdraw.show']);
+        Permission::create(['name' => 'withdraw.update']);
+        Permission::create(['name' => 'withdraw.destroy']);
+        Permission::create(['name' => 'withdraw.change_status']);
 
         // Payment Method permissions
-        Permission::create(['name' => 'admin.payment_method.index']);
-        Permission::create(['name' => 'admin.payment_method.store']);
-        Permission::create(['name' => 'admin.payment_method.show']);
-        Permission::create(['name' => 'admin.payment_method.update']);
-        Permission::create(['name' => 'admin.payment_method.destroy']);
+        Permission::create(['name' => 'payment_method.index']);
+        Permission::create(['name' => 'payment_method.store']);
+        Permission::create(['name' => 'payment_method.show']);
+        Permission::create(['name' => 'payment_method.update']);
+        Permission::create(['name' => 'payment_method.destroy']);
 
         // Ticket permissions
-        Permission::create(['name' => 'admin.ticket.index']);
-        Permission::create(['name' => 'admin.ticket.store']);
-        Permission::create(['name' => 'admin.ticket.show']);
-        Permission::create(['name' => 'admin.ticket.update']);
-        Permission::create(['name' => 'admin.ticket.destroy']);
+        Permission::create(['name' => 'ticket.index']);
+        Permission::create(['name' => 'ticket.store']);
+        Permission::create(['name' => 'ticket.show']);
+        Permission::create(['name' => 'ticket.update']);
+        Permission::create(['name' => 'ticket.destroy']);
     }
 }

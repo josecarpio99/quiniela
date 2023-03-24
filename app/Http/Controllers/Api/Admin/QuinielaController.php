@@ -15,7 +15,7 @@ class QuinielaController extends ApiController
      */
     public function index()
     {
-        $this->authorize('admin.quiniela.index');
+        $this->authorize('quiniela.index');
 
         return QuinielaResource::collection((Quiniela::paginate(10)));
     }
@@ -25,7 +25,7 @@ class QuinielaController extends ApiController
      */
     public function store(StoreQuinielaRequest $request)
     {
-        $this->authorize('admin.quiniela.store');
+        $this->authorize('quiniela.store');
 
         $quiniela = Quiniela::create($request->except('games'));
 
@@ -41,7 +41,7 @@ class QuinielaController extends ApiController
      */
     public function show(Quiniela $quiniela)
     {
-        $this->authorize('admin.quiniela.show');
+        $this->authorize('quiniela.show');
 
         return new QuinielaResource($quiniela);
     }
@@ -51,7 +51,7 @@ class QuinielaController extends ApiController
      */
     public function update(UpdateQuinielaRequest $request, Quiniela $quiniela)
     {
-        $this->authorize('admin.quiniela.update');
+        $this->authorize('quiniela.update');
 
         $gameRequestIds = collect($request->games)->pluck('id');
         if ($quiniela->tickets()->count() > 0) {
@@ -80,7 +80,7 @@ class QuinielaController extends ApiController
      */
     public function destroy(Quiniela $quiniela)
     {
-        $this->authorize('admin.quiniela.destroy');
+        $this->authorize('quiniela.destroy');
 
         $quiniela->games()->detach();
 

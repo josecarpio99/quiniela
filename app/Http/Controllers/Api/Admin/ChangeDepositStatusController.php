@@ -13,7 +13,7 @@ class ChangeDepositStatusController extends ApiController
 
     public function __invoke(ChangeDepositStatusRequest $request, Transaction $transaction)
     {
-        $this->authorize('admin.deposit.change_status');
+        $this->authorize('deposit.change_status');
 
         $prevStatus = $transaction->status;
 

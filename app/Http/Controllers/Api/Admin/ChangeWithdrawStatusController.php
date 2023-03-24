@@ -13,7 +13,7 @@ class ChangeWithdrawStatusController extends ApiController
 
     public function __invoke(ChangeWithdrawStatusRequest $request, Transaction $transaction)
     {
-        $this->authorize('admin.withdraw.change_status');
+        $this->authorize('withdraw.change_status');
 
         if ($request->status === TransactionStatusEnum::Approved->value) {
             if ($transaction->user->balance < $transaction->amount) {
