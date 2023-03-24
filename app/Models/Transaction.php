@@ -45,4 +45,11 @@ class Transaction extends Model
     {
         return $query->where('type', TransactionTypeEnum::Withdraw->value);
     }
+
+    public function scopeWhereUser(Builder $query, User|int $user)
+    {
+        $userId = is_int($user) ? $user : $user->id;
+
+        return $query->where('user_id', $userId);
+    }
 }

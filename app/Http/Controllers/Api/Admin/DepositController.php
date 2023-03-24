@@ -10,7 +10,6 @@ use App\Http\Resources\TransactionResource;
 use App\Http\Requests\Admin\StoreDepositRequest;
 use App\Http\Requests\Admin\UpdateDepositRequest;
 use App\Http\Requests\Admin\DestroyDepositRequest;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DepositController extends ApiController
 {
@@ -19,7 +18,7 @@ class DepositController extends ApiController
      */
     public function index()
     {
-        $this->authorize('admin.deposit.index');
+        $this->authorize('deposit.index');
 
         return TransactionResource::collection(
             Transaction::where('type', TransactionTypeEnum::Deposit->value)->paginate(10)
@@ -31,7 +30,7 @@ class DepositController extends ApiController
      */
     public function store(StoreDepositRequest $request)
     {
-        $this->authorize('admin.deposit.store');
+        $this->authorize('deposit.store');
 
         $transaction = auth()->user()->transactionsCreated()->create(
             $request->except('update_user_balance') +
@@ -53,7 +52,7 @@ class DepositController extends ApiController
      */
     public function show(Transaction $transaction)
     {
-        $this->authorize('admin.deposit.show');
+        $this->authorize('deposit.show');
 
         return new TransactionResource($transaction);
     }
@@ -63,7 +62,7 @@ class DepositController extends ApiController
      */
     public function update(UpdateDepositRequest $request, Transaction $transaction)
     {
-        $this->authorize('admin.deposit.update');
+        $this->authorize('deposit.update');
 
         $prevTransaction = $transaction->replicate();
         $transaction->update($request->except('update_user_balance'));
@@ -81,7 +80,7 @@ class DepositController extends ApiController
      */
     public function destroy(DestroyDepositRequest $request, Transaction $transaction)
     {
-        $this->authorize('admin.deposit.destroy');
+        $this->authorize('deposit.destroy');
 
         if ($request->update_user_balance) {
             $transaction->user()->decrement('balance', $transaction->amount);
