@@ -19,7 +19,7 @@ class WithdrawController extends ApiController
      */
     public function index()
     {
-        $this->authorize('admin.withdraw.index');
+        $this->authorize('withdraw.index');
 
         return TransactionResource::collection(
             Transaction::where('type', TransactionTypeEnum::Withdraw->value)->paginate(10)
@@ -31,7 +31,7 @@ class WithdrawController extends ApiController
      */
     public function store(StoreWithdrawRequest $request)
     {
-        $this->authorize('admin.withdraw.store');
+        $this->authorize('withdraw.store');
 
         $transaction = auth()->user()->transactionsCreated()->create(
             $request->except('update_user_balance') +
@@ -53,7 +53,7 @@ class WithdrawController extends ApiController
      */
     public function show(Transaction $transaction)
     {
-        $this->authorize('admin.withdraw.show');
+        $this->authorize('withdraw.show');
 
         return new TransactionResource($transaction);
     }
@@ -63,7 +63,7 @@ class WithdrawController extends ApiController
      */
     public function update(UpdateWithdrawRequest $request, Transaction $transaction)
     {
-        $this->authorize('admin.withdraw.update');
+        $this->authorize('withdraw.update');
 
         $prevTransaction = $transaction->replicate();
         $transaction->update($request->except('update_user_balance'));
@@ -81,7 +81,7 @@ class WithdrawController extends ApiController
      */
     public function destroy(DestroyWithdrawRequest $request, Transaction $transaction)
     {
-        $this->authorize('admin.withdraw.destroy');
+        $this->authorize('withdraw.destroy');
 
         if ($request->update_user_balance) {
             $transaction->user()->increment('balance', $transaction->amount);
