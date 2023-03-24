@@ -1,16 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Api\Admin;
+namespace App\Http\Controllers\Api;
 
 use App\Models\Pick;
 use App\Models\User;
 use App\Models\Ticket;
 use App\Models\Quiniela;
 use App\Http\Resources\TicketResource;
-use App\Http\Controllers\Api\ApiController;
-use App\Http\Requests\Admin\StoreTicketRequest;
-use App\Http\Requests\Admin\UpdateTicketRequest;
-use App\Http\Requests\Admin\DestroyTicketRequest;
+use App\Http\Requests\StoreTicketRequest;
+use App\Http\Requests\UpdateTicketRequest;
 
 class TicketController extends ApiController
 {
@@ -21,9 +19,11 @@ class TicketController extends ApiController
      */
     public function index(Quiniela $quiniela)
     {
-        $this->authorize('ticket.index');
+        $tickets = Ticket::whereUser(auth()->user())
+            ->orderBy('created_at', 'DESC')
+            ->paginate(10);
 
-        return TicketResource::collection((Ticket::paginate(10)));
+        return TicketResource::collection($tickets);
     }
 
     /**
@@ -36,10 +36,8 @@ class TicketController extends ApiController
     {
         $this->authorize('store', [Ticket::class, $quiniela]);
 
-        $user = User::find($request->user_id);
-
-        if ($user->balance < $quiniela->ticket_price) {
-            return $this->error('insufficient user funds');
+        if (auth()->user()->balance < $quiniela->ticket_price) {
+            return $this->error('Insufficient user funds');
         }
 
         if (
@@ -49,14 +47,13 @@ class TicketController extends ApiController
         }
 
         $ticket = $quiniela->tickets()->create([
-            'user_id' => $request->user_id,
-            'created_by' => auth()->user()->id,
+            'user_id' => auth()->user->id,
             'price' => $quiniela->ticket_price,
         ]);
 
         $ticket->picks()->createMany($request->picks);
 
-        $user->decrement('balance', $quiniela->ticket_price);
+        auth()->user()->decrement('balance', $quiniela->ticket_price);
 
         return new TicketResource($ticket);
     }
@@ -85,10 +82,6 @@ class TicketController extends ApiController
     {
         $this->authorize('update', [$ticket, $quiniela]);
 
-        if (! $quiniela->is_active || now()->gt($quiniela->close_at)) {
-            return $this->error('Quiniela is inactive or already closed');
-        }
-
         foreach ($request->picks as $pick) {
             Pick::where('id', $pick['id'])->update($pick);
         }
@@ -96,22 +89,4 @@ class TicketController extends ApiController
         return new TicketResource($ticket);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Ticket  $ticket
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(DestroyTicketRequest $request, Quiniela $quiniela, Ticket $ticket)
-    {
-        $this->authorize('ticket.destroy');
-
-        if ($request->update_user_balance) {
-            $ticket->user()->increment('balance', $ticket->price);
-        }
-
-        $ticket->delete();
-
-        return $this->noContent();
-    }
 }

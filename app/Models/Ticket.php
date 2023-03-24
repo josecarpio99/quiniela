@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Ticket extends Model
 {
@@ -22,5 +23,12 @@ class Ticket extends Model
     public function picks()
     {
         return $this->hasMany(Pick::class);
+    }
+
+    public function scopeWhereUser(Builder $query, User|int $user)
+    {
+        $userId = is_int($user) ? $user : $user->id;
+
+        return $query->where('user_id', $userId);
     }
 }
