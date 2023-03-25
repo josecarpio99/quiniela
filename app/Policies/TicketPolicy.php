@@ -18,9 +18,9 @@ class TicketPolicy
     }
 
     /**
-     * Determine whether the user can create models.
+     * Determine whether the user can store models.
      */
-    public function create(User $authUser, Quiniela $quiniela): bool
+    public function store(User $user, Quiniela $quiniela): bool
     {
         if (! $quiniela->is_active || now()->gt($quiniela->close_at)) {
             return false;

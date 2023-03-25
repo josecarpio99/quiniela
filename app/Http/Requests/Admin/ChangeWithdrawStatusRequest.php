@@ -29,8 +29,7 @@ class ChangeWithdrawStatusRequest extends FormRequest
             'status' => [
                 'required',
                 Rule::in(TransactionStatusEnum::allExceptFor($this->withdraw->status))
-            ],
-            'update_user_balance' => ['required', 'boolean']
+            ]
         ];
     }
 }

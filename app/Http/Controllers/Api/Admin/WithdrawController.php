@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
+use App\Models\User;
 use App\Models\Transaction;
 use App\Enums\TransactionTypeEnum;
 use App\Enums\TransactionStatusEnum;
@@ -33,6 +34,10 @@ class WithdrawController extends ApiController
     {
         $this->authorize('withdraw.store');
 
+        $user = User::find($request->user_id);
+
+        abort_if(! $user->canWithdraw($request->amount), 403, 'User can´t wihtdraw');
+
         $transaction = auth()->user()->transactionsCreated()->create(
             $request->except('update_user_balance') +
             [
@@ -42,7 +47,7 @@ class WithdrawController extends ApiController
         );
 
         if ($request->update_user_balance) {
-            $transaction->user()->decrement('balance', $request->amount);
+            $user->decrement('balance', $request->amount);
         }
 
         return new TransactionResource($transaction);

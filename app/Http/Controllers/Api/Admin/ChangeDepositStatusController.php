@@ -20,13 +20,13 @@ class ChangeDepositStatusController extends ApiController
         $transaction->update(['status' => $request->status]);
 
         if ($request->update_user_balance) {
+
             if ($request->status === TransactionStatusEnum::Approved->value) {
+
                 $transaction->user()->increment('balance', $transaction->amount);
+
             }
 
-            if ($prevStatus === TransactionStatusEnum::Approved->value) {
-                $transaction->user()->decrement('balance', $transaction->amount);
-            }
         }
 
         return new TransactionResource($transaction);

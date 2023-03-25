@@ -39,7 +39,7 @@ class TicketController extends ApiController
         $user = User::find($request->user_id);
 
         if ($user->balance < $quiniela->ticket_price) {
-            return $this->error('insufficient user funds');
+            return $this->error('Insufficient user funds');
         }
 
         if (
