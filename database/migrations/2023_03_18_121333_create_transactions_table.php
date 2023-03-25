@@ -22,7 +22,7 @@ return new class extends Migration
             $table->decimal('amount', 8, 2);
             $table->string('status')->default(TransactionStatusEnum::Pending->value);
             $table->string('rejected_reason')->nullable();
-            $table->date('date');
+            $table->date('date')->nullable();
             $table->timestamps();
         });
     }

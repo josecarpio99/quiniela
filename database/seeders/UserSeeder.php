@@ -31,5 +31,10 @@ class UserSeeder extends Seeder
             'name' => 'User 1',
             'email' => 'user1@test.com',
         ])->assignRole(Role::findByName('Client'));
+
+        User::factory()->create([
+            'name' => 'User 2',
+            'email' => 'user2@test.com',
+        ])->assignRole(Role::findByName('Client'));
     }
 }

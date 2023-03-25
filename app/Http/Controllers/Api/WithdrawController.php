@@ -30,6 +30,8 @@ class WithdrawController extends ApiController
      */
     public function store(StoreWithdrawRequest $request)
     {
+        abort_if(auth()->user()->balance < $request->amount, 403, 'Insufficient user funds');
+
         $transaction = auth()->user()->transactions()->create(
             $request->validated() +
             [
@@ -37,6 +39,8 @@ class WithdrawController extends ApiController
                 'status' => TransactionStatusEnum::Pending->value
             ]
         );
+
+        auth()->user()->decrement('balance', $transaction->amount);
 
         return new TransactionResource($transaction);
     }

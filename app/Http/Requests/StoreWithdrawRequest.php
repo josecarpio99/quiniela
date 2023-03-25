@@ -22,9 +22,7 @@ class StoreWithdrawRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'amount' => ['required', 'regex:/^\d+(\.\d{1,2})?$/'],
-            'date'   => ['required', 'date_format:Y-m-d'],
-            'payment_reference' => ['required']
+            'amount' => ['required', 'regex:/^\d+(\.\d{1,2})?$/']
         ];
     }
 }

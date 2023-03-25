@@ -24,7 +24,7 @@ class TransactionResource extends JsonResource
             'payment_reference' =>  $this->payment_reference,
             'status' =>  $this->status,
             'rejected_reason' =>  $this->rejected_reason,
-            'date' =>  $this->date->format('Y-m-d')
+            'date' =>  $this->date?->format('Y-m-d')
         ];
     }
 }

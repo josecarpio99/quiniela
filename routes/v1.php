@@ -32,16 +32,16 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('withdraw/{withdraw}/status', ChangeWithdrawStatusController::class);
     });
 
-    Route::get('deposit', [App\Http\Controllers\Api\DepositControllers::class, 'index']);
-    Route::post('deposit', [App\Http\Controllers\Api\DepositControllers::class, 'store']);
-    Route::get('deposit/{deposit}', [App\Http\Controllers\Api\DepositControllers::class, 'show']);
+    Route::get('deposit', [App\Http\Controllers\Api\DepositController::class, 'index']);
+    Route::post('deposit', [App\Http\Controllers\Api\DepositController::class, 'store']);
+    Route::get('deposit/{deposit}', [App\Http\Controllers\Api\DepositController::class, 'show']);
 
-    Route::get('withdraw', [App\Http\Controllers\Api\WithdrawControllers::class, 'index']);
-    Route::post('withdraw', [App\Http\Controllers\Api\WithdrawControllers::class, 'store']);
-    Route::get('withdraw/{deposit}', [App\Http\Controllers\Api\WithdrawControllers::class, 'show']);
+    Route::get('withdraw', [App\Http\Controllers\Api\WithdrawController::class, 'index']);
+    Route::post('withdraw', [App\Http\Controllers\Api\WithdrawController::class, 'store']);
+    Route::get('withdraw/{deposit}', [App\Http\Controllers\Api\WithdrawController::class, 'show']);
 
-    Route::get('ticket', [App\Http\Controllers\Api\TicketControllers::class, 'index']);
-    Route::post('ticket', [App\Http\Controllers\Api\TicketControllers::class, 'store']);
-    Route::get('ticket/{deposit}', [App\Http\Controllers\Api\TicketControllers::class, 'show']);
-    Route::put('ticket/{deposit}', [App\Http\Controllers\Api\TicketControllers::class, 'update']);
+    Route::get('ticket', [App\Http\Controllers\Api\TicketController::class, 'index']);
+    Route::post('ticket', [App\Http\Controllers\Api\TicketController::class, 'store']);
+    Route::get('ticket/{deposit}', [App\Http\Controllers\Api\TicketController::class, 'show']);
+    Route::put('ticket/{deposit}', [App\Http\Controllers\Api\TicketController::class, 'update']);
 });
