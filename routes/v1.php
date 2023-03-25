@@ -26,7 +26,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::scopeBindings()->group(function() {
             Route::apiResource('quiniela.ticket', TicketController::class);
-            Route::post('quiniela/{quiniela}/update_points')->name('ticket.update_points');
+            Route::post('quiniela/{quiniela}/ticket/update_points')->name('ticket.update_points');
         });
 
         Route::post('deposit/{deposit}/status', ChangeDepositStatusController::class);
