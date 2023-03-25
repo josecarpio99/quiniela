@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Quiniela extends Model
 {
@@ -22,6 +23,11 @@ class Quiniela extends Model
     public function tickets()
     {
         return $this->hasMany(Ticket::class);
+    }
+
+    public function picks(): HasManyThrough
+    {
+        return $this->hasManyThrough(Pick::class, Ticket::class);
     }
 
     public function gamesMatch(array $gameIds) : bool

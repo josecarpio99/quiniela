@@ -69,5 +69,6 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'ticket.show']);
         Permission::create(['name' => 'ticket.update']);
         Permission::create(['name' => 'ticket.destroy']);
+        Permission::create(['name' => 'ticket.update_points']);
     }
 }
