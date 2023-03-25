@@ -53,4 +53,15 @@ class User extends Authenticatable
     {
         return $this->hasMany(Transaction::class, 'user_id');
     }
+
+    public function canWithdraw(float|int $amount) : bool
+    {
+        return $this->balance >= $amount &&
+            $this->lastWithdraw()->created_at->diffInDays(now()) >= Transaction::MAX_WITHDRAW_PER_DAY;
+    }
+
+    public function lastWithdraw() : Transaction
+    {
+        return $this->transactions()->latest()->first();
+    }
 }

@@ -20,7 +20,7 @@ class TicketPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user, Quiniela $quiniela): bool
+    public function create(User $authUser, Quiniela $quiniela): bool
     {
         if (! $quiniela->is_active || now()->gt($quiniela->close_at)) {
             return false;

@@ -19,7 +19,7 @@ class WithdrawController extends ApiController
     {
         $withdraws = Transaction::whereUser(auth()->user())
             ->fromWithdraws()
-            ->orderBy('created_at', 'DESC')
+            ->latest()
             ->paginate(10);
 
         return TransactionResource::collection($withdraws);
@@ -30,7 +30,7 @@ class WithdrawController extends ApiController
      */
     public function store(StoreWithdrawRequest $request)
     {
-        abort_if(auth()->user()->balance < $request->amount, 403, 'Insufficient user funds');
+        abort_if(! auth()->user()->canWithdraw($request->amount), 403, 'User can´t wihtdraw');
 
         $transaction = auth()->user()->transactions()->create(
             $request->validated() +

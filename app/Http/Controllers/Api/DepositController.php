@@ -18,7 +18,7 @@ class DepositController extends ApiController
     {
         $deposits = Transaction::whereUser(auth()->user())
             ->fromDeposits()
-            ->orderBy('created_at', 'DESC')
+            ->latest()
             ->paginate(10);
 
         return TransactionResource::collection($deposits);

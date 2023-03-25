@@ -11,6 +11,9 @@ class Transaction extends Model
 {
     use HasFactory;
 
+    public const MIN_WITHDRAW_AMOUNT = 10;
+    public const MAX_WITHDRAW_PER_DAY = 1;
+
     protected $casts = [
         'amount' => 'float',
         'date'   => 'datetime'

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Transaction;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreWithdrawRequest extends FormRequest
@@ -22,7 +23,11 @@ class StoreWithdrawRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'amount' => ['required', 'regex:/^\d+(\.\d{1,2})?$/']
+            'amount' => [
+                'required',
+                'regex:/^\d+(\.\d{1,2})?$/',
+                'gte:' . Transaction::MIN_WITHDRAW_AMOUNT
+            ]
         ];
     }
 }
