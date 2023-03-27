@@ -9,6 +9,7 @@ use App\Enums\TransactionStatusEnum;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Resources\TransactionResource;
+use App\Actions\Withdraw\StoreWithdrawAction;
 use App\Http\Requests\Admin\StoreWithdrawRequest;
 use App\Http\Requests\Admin\UpdateWithdrawRequest;
 use App\Http\Requests\Admin\DestroyWithdrawRequest;
@@ -36,19 +37,7 @@ class WithdrawController extends ApiController
 
         $user = User::find($request->user_id);
 
-        abort_if(! $user->canWithdraw($request->amount), 403, 'User can´t wihtdraw');
-
-        $transaction = auth()->user()->transactionsCreated()->create(
-            $request->except('update_user_balance') +
-            [
-                'type' => TransactionTypeEnum::Withdraw->value,
-                'status' => TransactionStatusEnum::Approved->value
-            ]
-        );
-
-        if ($request->update_user_balance) {
-            $user->decrement('balance', $request->amount);
-        }
+        $transaction = (new StoreWithdrawAction())->execute($request, $user);
 
         return new TransactionResource($transaction);
     }

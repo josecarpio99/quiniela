@@ -60,6 +60,22 @@ class User extends Authenticatable
             $this->lastWithdraw()->created_at->diffInDays(now()) >= Transaction::MAX_WITHDRAW_PER_DAY;
     }
 
+    public function canWithdrawAmount(float|int $amount) : bool
+    {
+        return $this->balance >= $amount;
+    }
+
+    public function hasExceededWithdrawDailyLimit() : bool
+    {
+        $lastWithdraw = $this->lastWithdraw();
+
+        if ($lastWithdraw) {
+            return $lastWithdraw->created_at->diffInDays(now()) < Transaction::MAX_WITHDRAW_PER_DAY;;
+        }
+
+        return true;
+    }
+
     public function lastWithdraw() : Transaction
     {
         return $this->transactions()->latest()->first();

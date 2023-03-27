@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Actions\Withdraw\StoreWithdrawAction;
 use App\Models\Transaction;
 use App\Enums\TransactionTypeEnum;
 use App\Enums\TransactionStatusEnum;
@@ -30,17 +31,7 @@ class WithdrawController extends ApiController
      */
     public function store(StoreWithdrawRequest $request)
     {
-        abort_if(! auth()->user()->canWithdraw($request->amount), 403, 'User can´t wihtdraw');
-
-        $transaction = auth()->user()->transactions()->create(
-            $request->validated() +
-            [
-                'type' => TransactionTypeEnum::Withdraw->value,
-                'status' => TransactionStatusEnum::Pending->value
-            ]
-        );
-
-        auth()->user()->decrement('balance', $transaction->amount);
+        $transaction = (new StoreWithdrawAction())->execute($request, auth()->user());
 
         return new TransactionResource($transaction);
     }
