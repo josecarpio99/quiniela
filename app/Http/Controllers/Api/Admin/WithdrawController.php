@@ -12,7 +12,7 @@ use App\Http\Resources\TransactionResource;
 use App\Actions\Withdraw\AdminStoreWithdrawAction;
 use App\Http\Requests\Admin\StoreWithdrawRequest;
 use App\Http\Requests\Admin\UpdateWithdrawRequest;
-use App\Http\Requests\Admin\DestroyWithdrawRequest;
+use Illuminate\Http\Request;
 
 class WithdrawController extends ApiController
 {
@@ -24,7 +24,7 @@ class WithdrawController extends ApiController
         $this->authorize('withdraw.index');
 
         return TransactionResource::collection(
-            Transaction::where('type', TransactionTypeEnum::Withdraw->value)->paginate(10)
+            Transaction::fromWithdrawals()->paginate(10)
         );
     }
 
@@ -59,13 +59,7 @@ class WithdrawController extends ApiController
     {
         $this->authorize('withdraw.update');
 
-        $prevTransaction = $transaction->replicate();
         $transaction->update($request->except('update_user_balance'));
-
-        if ($request->update_user_balance) {
-            $newBalance = ( $transaction->user->balance + $prevTransaction->amount ) - $transaction->amount;
-            $transaction->user()->update(['balance' => $newBalance]);
-        }
 
         return new TransactionResource($transaction);
     }
@@ -73,13 +67,9 @@ class WithdrawController extends ApiController
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(DestroyWithdrawRequest $request, Transaction $transaction)
+    public function destroy(Request $request, Transaction $transaction)
     {
         $this->authorize('withdraw.destroy');
-
-        if ($request->update_user_balance) {
-            $transaction->user()->increment('balance', $transaction->amount);
-        }
 
         $transaction->delete();
 

@@ -45,7 +45,7 @@ class Transaction extends Model
         return $query->where('type', TransactionTypeEnum::Deposit);
     }
 
-    public function scopeFromWithdraws(Builder $query)
+    public function scopeFromWithdrawals(Builder $query)
     {
         return $query->where('type', TransactionTypeEnum::Withdraw);
     }

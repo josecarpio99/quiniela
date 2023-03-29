@@ -45,7 +45,7 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         Route::bind('withdraw', function (string $value) {
-            return Transaction::where('id', $value)->fromWithdraws()->firstOrFail();
+            return Transaction::where('id', $value)->fromWithdrawals()->firstOrFail();
         });
     }
 

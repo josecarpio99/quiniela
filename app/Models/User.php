@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Enums\TransactionStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -54,12 +56,6 @@ class User extends Authenticatable
         return $this->hasMany(Transaction::class, 'user_id');
     }
 
-    public function canWithdraw(float|int $amount) : bool
-    {
-        return $this->balance >= $amount &&
-            $this->lastWithdraw()->created_at->diffInDays(now()) >= Transaction::MAX_WITHDRAW_PER_DAY;
-    }
-
     public function canWithdrawAmount(float|int $amount) : bool
     {
         return $this->balance >= $amount;
@@ -78,6 +74,9 @@ class User extends Authenticatable
 
     public function lastWithdraw() : Transaction
     {
-        return $this->transactions()->latest()->first();
+        return $this->transactions()
+            ->where('status', '<>', TransactionStatusEnum::Rejected)
+            ->latest()
+            ->first();
     }
 }

@@ -19,7 +19,7 @@ class WithdrawController extends ApiController
     public function index()
     {
         $withdraws = Transaction::whereUser(auth()->user())
-            ->fromWithdraws()
+            ->fromWithdrawals()
             ->latest()
             ->paginate(10);
 
