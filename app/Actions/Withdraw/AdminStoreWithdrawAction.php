@@ -10,7 +10,7 @@ use App\Enums\TransactionStatusEnum;
 use App\Exceptions\InsufficientUserBalanceException;
 use App\Exceptions\UserExceededWithdrawDailyLimitException;
 
-class StoreWithdrawAction
+class AdminStoreWithdrawAction
 {
     public function execute(Request $request, User $user) : Transaction
     {
@@ -18,16 +18,17 @@ class StoreWithdrawAction
         throw_if($user->hasExceededWithdrawDailyLimit(), UserExceededWithdrawDailyLimitException::class);
 
         $transaction = $user->transactions()->create(
-            $request->validated() +
+            $request->except('update_user_balance') +
             [
                 'type' => TransactionTypeEnum::Withdraw,
-                'status' => TransactionStatusEnum::Pending
+                'status' => TransactionStatusEnum::Approved,
+                'created_by' => auth()->user()->id
             ]
         );
 
-        $user->decrement('balance', $transaction->amount);
-
-        // TODO: Notify withdraw to admin...
+        if ($request->update_user_balance) {
+            $user->decrement('balance', $transaction->amount);
+        }
 
         return $transaction;
     }

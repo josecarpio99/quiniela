@@ -9,7 +9,7 @@ use App\Enums\TransactionStatusEnum;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Resources\TransactionResource;
-use App\Actions\Withdraw\StoreWithdrawAction;
+use App\Actions\Withdraw\AdminStoreWithdrawAction;
 use App\Http\Requests\Admin\StoreWithdrawRequest;
 use App\Http\Requests\Admin\UpdateWithdrawRequest;
 use App\Http\Requests\Admin\DestroyWithdrawRequest;
@@ -37,7 +37,7 @@ class WithdrawController extends ApiController
 
         $user = User::find($request->user_id);
 
-        $transaction = (new StoreWithdrawAction())->execute($request, $user);
+        $transaction = (new AdminStoreWithdrawAction())->execute($request, $user);
 
         return new TransactionResource($transaction);
     }
