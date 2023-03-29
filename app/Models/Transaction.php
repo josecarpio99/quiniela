@@ -12,6 +12,7 @@ class Transaction extends Model
     use HasFactory;
 
     public const MIN_WITHDRAW_AMOUNT = 10;
+    public const MIN_DEPOSIT_AMOUNT = 2;
     public const MAX_WITHDRAW_PER_DAY = 1;
 
     protected $casts = [
@@ -31,22 +32,22 @@ class Transaction extends Model
 
     public function isDeposit() : bool
     {
-        return $this->type === TransactionTypeEnum::Deposit->value;
+        return $this->type === TransactionTypeEnum::Deposit;
     }
 
     public function isWithdraw() : bool
     {
-        return $this->type === TransactionTypeEnum::Withdraw->value;
+        return $this->type === TransactionTypeEnum::Withdraw;
     }
 
     public function scopeFromDeposits(Builder $query)
     {
-        return $query->where('type', TransactionTypeEnum::Deposit->value);
+        return $query->where('type', TransactionTypeEnum::Deposit);
     }
 
     public function scopeFromWithdraws(Builder $query)
     {
-        return $query->where('type', TransactionTypeEnum::Withdraw->value);
+        return $query->where('type', TransactionTypeEnum::Withdraw);
     }
 
     public function scopeWhereUser(Builder $query, User|int $user)

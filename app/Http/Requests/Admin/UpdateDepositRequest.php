@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Models\Transaction;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateDepositRequest extends FormRequest
@@ -22,11 +23,14 @@ class UpdateDepositRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'amount' => ['required', 'regex:/^\d+(\.\d{1,2})?$/'],
+            'amount' => [
+                'required',
+                'regex:/^\d+(\.\d{1,2})?$/',
+                'gte:' . Transaction::MIN_DEPOSIT_AMOUNT
+            ],
             'date'   => ['required', 'date_format:Y-m-d'],
             'payment_method' => ['required', 'integer', 'exists:payment_methods,id'],
-            'payment_reference' => ['required'],
-            'update_user_balance' => ['required', 'boolean']
+            'payment_reference' => ['required']
         ];
     }
 }

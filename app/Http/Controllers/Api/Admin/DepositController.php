@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Models\Transaction;
+use Illuminate\Http\Request;
 use App\Enums\TransactionTypeEnum;
 use App\Enums\TransactionStatusEnum;
 use App\Http\Controllers\Api\ApiController;
@@ -21,7 +22,7 @@ class DepositController extends ApiController
         $this->authorize('deposit.index');
 
         return TransactionResource::collection(
-            Transaction::where('type', TransactionTypeEnum::Deposit->value)->paginate(10)
+            Transaction::fromDeposits()->paginate(10)
         );
     }
 
@@ -35,8 +36,8 @@ class DepositController extends ApiController
         $transaction = auth()->user()->transactionsCreated()->create(
             $request->except('update_user_balance') +
             [
-                'type' => TransactionTypeEnum::Deposit->value,
-                'status' => TransactionStatusEnum::Approved->value
+                'type' => TransactionTypeEnum::Deposit,
+                'status' => TransactionStatusEnum::Approved
             ]
         );
 
@@ -64,13 +65,7 @@ class DepositController extends ApiController
     {
         $this->authorize('deposit.update');
 
-        $prevTransaction = $transaction->replicate();
         $transaction->update($request->except('update_user_balance'));
-
-        if ($request->update_user_balance) {
-            $newBalance = ( $transaction->user->balance - $prevTransaction->amount ) + $transaction->amount;
-            $transaction->user()->update(['balance' => $newBalance]);
-        }
 
         return new TransactionResource($transaction);
     }
@@ -78,13 +73,9 @@ class DepositController extends ApiController
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(DestroyDepositRequest $request, Transaction $transaction)
+    public function destroy(Request $request, Transaction $transaction)
     {
         $this->authorize('deposit.destroy');
-
-        if ($request->update_user_balance) {
-            $transaction->user()->decrement('balance', $transaction->amount);
-        }
 
         $transaction->delete();
 

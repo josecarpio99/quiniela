@@ -32,8 +32,8 @@ class DepositController extends ApiController
         $transaction = auth()->user()->transactions()->create(
             $request->validated() +
             [
-                'type' => TransactionTypeEnum::Deposit->value,
-                'status' => TransactionStatusEnum::Pending->value
+                'type' => TransactionTypeEnum::Deposit,
+                'status' => TransactionStatusEnum::Pending
             ]
         );
 
