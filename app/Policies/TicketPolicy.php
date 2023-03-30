@@ -20,13 +20,18 @@ class TicketPolicy
     /**
      * Determine whether the user can store models.
      */
-    public function store(User $user, Quiniela $quiniela): bool
+    public function store(User $user, Quiniela $quiniela, bool $fromAdmin = false): bool
     {
         if (! $quiniela->is_active || now()->gt($quiniela->close_at)) {
             return false;
         }
 
-        return true;
+        if ($fromAdmin) {
+            return $user->can('ticket.store');
+        } else {
+            return true;
+        }
+
     }
 
     /**
@@ -38,14 +43,18 @@ class TicketPolicy
             return false;
         }
 
-        if ($user->can('ticket.create')) {
+        if ($user->can('ticket.update')) {
             return true;
         }
 
-        if ($ticket->user_id === $user->id) {
-            return true;
-        }
+        return $ticket->user_id === $user->id;
+    }
 
-        return false;
+    /**
+     * Determine whether the user can destroy the model.
+     */
+    public function destroy(User $user, Ticket $ticket): bool
+    {
+        return $user->can('ticket.destroy');
     }
 }

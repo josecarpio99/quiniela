@@ -35,7 +35,7 @@ class TicketController extends ApiController
      */
     public function store(StoreTicketRequest $request, Quiniela $quiniela)
     {
-        $this->authorize('store', [Ticket::class, $quiniela]);
+        $this->authorize('store', [Ticket::class, $quiniela, true]);
 
         $user = User::find($request->user_id);
 
@@ -52,8 +52,6 @@ class TicketController extends ApiController
      */
     public function show(Quiniela $quiniela, Ticket $ticket)
     {
-        $this->authorize('show', [$ticket, $quiniela]);
-
         return new TicketResource($ticket);
     }
 
@@ -66,11 +64,7 @@ class TicketController extends ApiController
      */
     public function update(UpdateTicketRequest $request, Quiniela $quiniela, Ticket $ticket)
     {
-        $this->authorize('update', [$ticket, $quiniela]);
-
-        if (! $quiniela->is_active || now()->gt($quiniela->close_at)) {
-            return $this->error('Quiniela is inactive or already closed');
-        }
+        $this->authorize('update', $ticket);
 
         foreach ($request->picks as $pick) {
             Pick::where('id', $pick['id'])->update($pick);
@@ -87,7 +81,7 @@ class TicketController extends ApiController
      */
     public function destroy(DestroyTicketRequest $request, Quiniela $quiniela, Ticket $ticket)
     {
-        $this->authorize('ticket.destroy');
+        $this->authorize('destroy', $ticket);
 
         if ($request->update_user_balance) {
             $ticket->user()->increment('balance', $ticket->price);

@@ -20,8 +20,8 @@ class TicketController extends ApiController
      */
     public function index(Quiniela $quiniela)
     {
-        $tickets = Ticket::whereUser(auth()->user())
-            ->orderBy('created_at', 'DESC')
+        $tickets = Ticket::query()
+            ->latest()
             ->paginate(10);
 
         return TicketResource::collection($tickets);
@@ -50,8 +50,6 @@ class TicketController extends ApiController
      */
     public function show(Quiniela $quiniela, Ticket $ticket)
     {
-        $this->authorize('show', [$ticket, $quiniela]);
-
         return new TicketResource($ticket);
     }
 
@@ -64,7 +62,7 @@ class TicketController extends ApiController
      */
     public function update(UpdateTicketRequest $request, Quiniela $quiniela, Ticket $ticket)
     {
-        $this->authorize('update', [$ticket, $quiniela]);
+        $this->authorize('update', $ticket);
 
         foreach ($request->picks as $pick) {
             Pick::where('id', $pick['id'])->update($pick);

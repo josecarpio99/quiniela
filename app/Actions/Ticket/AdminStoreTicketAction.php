@@ -2,10 +2,12 @@
 
 namespace App\Actions\Ticket;
 
-use App\Models\Quiniela;
-use App\Models\Ticket;
 use App\Models\User;
+use App\Models\Ticket;
+use App\Models\Quiniela;
 use Illuminate\Http\Request;
+use App\Exceptions\InsufficientUserBalanceException;
+use App\Exceptions\GamesDoNotBelongToQuinielaException;
 
 class AdminStoreTicketAction
 {

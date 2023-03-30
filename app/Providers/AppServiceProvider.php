@@ -27,8 +27,8 @@ class AppServiceProvider extends ServiceProvider
     {
         Model::unguard();
 
-        Gate::before(function ($user, $ability) {
-            return $user->hasRole('Super admin') ? true : null;
-        });
+        // Gate::before(function ($user, $ability) {
+        //     return $user->hasRole('Super admin') ? true : null;
+        // });
     }
 }

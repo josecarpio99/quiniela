@@ -41,8 +41,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('withdraw', [App\Http\Controllers\Api\WithdrawController::class, 'store']);
     Route::get('withdraw/{deposit}', [App\Http\Controllers\Api\WithdrawController::class, 'show']);
 
-    Route::get('ticket', [App\Http\Controllers\Api\TicketController::class, 'index']);
-    Route::post('ticket', [App\Http\Controllers\Api\TicketController::class, 'store']);
-    Route::get('ticket/{deposit}', [App\Http\Controllers\Api\TicketController::class, 'show']);
-    Route::put('ticket/{deposit}', [App\Http\Controllers\Api\TicketController::class, 'update']);
+    Route::get('quiniela/{quiniela}/ticket', [App\Http\Controllers\Api\TicketController::class, 'index']);
+    Route::post('quiniela/{quiniela}/ticket', [App\Http\Controllers\Api\TicketController::class, 'store']);
+    Route::get('quiniela/{quiniela}/ticket/{ticket}', [App\Http\Controllers\Api\TicketController::class, 'show']);
+    Route::put('quiniela/{quiniela}/ticket/{ticket}', [App\Http\Controllers\Api\TicketController::class, 'update']);
 });
