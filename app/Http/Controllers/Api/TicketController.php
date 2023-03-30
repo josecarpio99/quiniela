@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Ticket;
 use App\Models\Quiniela;
 use App\Http\Resources\TicketResource;
+use App\Actions\Ticket\StoreTicketAction;
 use App\Http\Requests\StoreTicketRequest;
 use App\Http\Requests\UpdateTicketRequest;
 
@@ -36,24 +37,7 @@ class TicketController extends ApiController
     {
         $this->authorize('store', [Ticket::class, $quiniela]);
 
-        if (auth()->user()->balance < $quiniela->ticket_price) {
-            return $this->error('Insufficient user funds');
-        }
-
-        if (
-            ! $quiniela->gamesMatch(collect($request->picks)->pluck('game_id')->all())
-        ) {
-            return $this->error('Game/s dont belong to quiniela');
-        }
-
-        $ticket = $quiniela->tickets()->create([
-            'user_id' => auth()->user->id,
-            'price' => $quiniela->ticket_price,
-        ]);
-
-        $ticket->picks()->createMany($request->picks);
-
-        auth()->user()->decrement('balance', $quiniela->ticket_price);
+        $ticket = (new StoreTicketAction)->execute($request, auth()->user(), $quiniela);
 
         return new TicketResource($ticket);
     }

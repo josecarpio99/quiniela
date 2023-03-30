@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
+use App\Actions\Ticket\AdminStoreTicketAction;
 use App\Models\Pick;
 use App\Models\User;
 use App\Models\Ticket;
@@ -38,25 +39,7 @@ class TicketController extends ApiController
 
         $user = User::find($request->user_id);
 
-        if ($user->balance < $quiniela->ticket_price) {
-            return $this->error('Insufficient user funds');
-        }
-
-        if (
-            ! $quiniela->gamesMatch(collect($request->picks)->pluck('game_id')->all())
-        ) {
-            return $this->error('Game/s dont belong to quiniela');
-        }
-
-        $ticket = $quiniela->tickets()->create([
-            'user_id' => $request->user_id,
-            'created_by' => auth()->user()->id,
-            'price' => $quiniela->ticket_price,
-        ]);
-
-        $ticket->picks()->createMany($request->picks);
-
-        $user->decrement('balance', $quiniela->ticket_price);
+        $ticket = (new AdminStoreTicketAction)->execute($request, $user, $quiniela);
 
         return new TicketResource($ticket);
     }
