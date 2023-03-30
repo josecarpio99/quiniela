@@ -14,7 +14,7 @@ class AdminStoreWithdrawAction
 {
     public function execute(Request $request, User $user) : Transaction
     {
-        throw_if(! $user->canWithdrawAmount($request->amount), InsufficientUserBalanceException::class);
+        throw_if(! $user->hasEnoughAmount($request->amount), InsufficientUserBalanceException::class);
         throw_if($user->hasExceededWithdrawDailyLimit(), UserExceededWithdrawDailyLimitException::class);
 
         $transaction = $user->transactions()->create(

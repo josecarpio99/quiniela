@@ -56,7 +56,7 @@ class User extends Authenticatable
         return $this->hasMany(Transaction::class, 'user_id');
     }
 
-    public function canWithdrawAmount(float|int $amount) : bool
+    public function hasEnoughAmount(float|int $amount) : bool
     {
         return $this->balance >= $amount;
     }
