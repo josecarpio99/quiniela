@@ -19,7 +19,12 @@ class TeamController extends ApiController
     {
         $this->authorize('team.index');
 
-        return TeamResource::collection((Team::paginate(10)));
+        $teams = Team::query()
+            ->with('country')
+            ->where('is_country', false)
+            ->orderBy('name');
+
+        return TeamResource::collection(($teams->paginate(10)));
     }
 
     /**
