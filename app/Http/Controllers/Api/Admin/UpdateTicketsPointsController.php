@@ -16,11 +16,12 @@ class UpdateTicketsPointsController extends ApiController
     {
         $this->authorize('ticket.update_points');
 
-        foreach ($request->games as $game) {
+        foreach ($request->games as $gameArr) {
 
-            $game = Game::where('id', $game['id'])->update([
-                'home_score' => $game['home_score'],
-                'away_score' => $game['away_score']
+            $game = Game::find($gameArr['id']);
+            $game->update([
+                'home_score' => $gameArr['home_score'],
+                'away_score' => $gameArr['away_score']
             ]);
 
             $operator = '>';
@@ -35,7 +36,7 @@ class UpdateTicketsPointsController extends ApiController
                     ->where('game_id', $game->id)
                     ->whereColumn('away_score', '<=', 'home_score')
                     ->update([
-                        'points' => GameResultPredictionPointsEnum::FAILED_RESULT->value
+                        'picks.points' => GameResultPredictionPointsEnum::FAILED_RESULT->value
                     ]);
 
             } elseif ($game->home_score === $game->away_score) {
@@ -45,10 +46,12 @@ class UpdateTicketsPointsController extends ApiController
                 $quiniela
                     ->picks()
                     ->where('game_id', $game->id)
-                    ->whereColumn('away_score', '>', 'home_score')
-                    ->OrWhereColumn('home_score', '>', 'away_score')
+                    ->where(function($query) {
+                        $query->whereColumn('away_score', '>', 'home_score');
+                        $query->OrWhereColumn('home_score', '>', 'away_score');
+                    })
                     ->update([
-                        'points' => GameResultPredictionPointsEnum::FAILED_RESULT->value
+                        'picks.points' => GameResultPredictionPointsEnum::FAILED_RESULT->value
                     ]);
 
             } else {
@@ -58,7 +61,7 @@ class UpdateTicketsPointsController extends ApiController
                     ->where('game_id', $game->id)
                     ->whereColumn('home_score', '<=', 'away_score')
                     ->update([
-                        'points' => GameResultPredictionPointsEnum::FAILED_RESULT->value
+                        'picks.points' => GameResultPredictionPointsEnum::FAILED_RESULT->value
                     ]);
             }
 
@@ -67,7 +70,7 @@ class UpdateTicketsPointsController extends ApiController
                 ->picks()
                 ->where('game_id', $game->id)
                 ->whereColumn('home_score', $operator, 'away_score')
-                ->update(['points' => GameResultPredictionPointsEnum::CORRECT_RESULT->value]);
+                ->update(['picks.points' => GameResultPredictionPointsEnum::CORRECT_RESULT->value]);
 
             // Update picks with exact scoreboard
             $quiniela
@@ -75,7 +78,7 @@ class UpdateTicketsPointsController extends ApiController
                 ->where('game_id', $game->id)
                 ->where('home_score', $game->home_score)
                 ->where('away_score', $game->away_score)
-                ->update(['points' => GameResultPredictionPointsEnum::EXACT_SCOREBOARD->value]);
+                ->update(['picks.points' => GameResultPredictionPointsEnum::EXACT_SCOREBOARD->value]);
         }
 
         // Update tickets points
