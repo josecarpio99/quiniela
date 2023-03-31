@@ -29,6 +29,6 @@ class QuinielaSeeder extends Seeder
             ]
         ]);
 
-        $quiniela->games()->attach(Game::take(3)->get()->pluck('id'));
+        $quiniela->games()->attach(Game::take(5)->get()->pluck('id'));
     }
 }

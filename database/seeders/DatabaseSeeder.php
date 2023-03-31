@@ -24,7 +24,8 @@ class DatabaseSeeder extends Seeder
             PaymentMethodSeeder::class,
             GameSeeder::class,
             TransactionSeeder::class,
-            QuinielaSeeder::class
+            QuinielaSeeder::class,
+            TicketSeeder::class,
         ]);
     }
 }
