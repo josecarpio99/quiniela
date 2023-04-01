@@ -8,6 +8,7 @@ use App\Models\Quiniela;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Requests\Admin\UpdateTicketsPointsRequest;
 use App\Http\Resources\QuinielaResource;
+use App\Models\Ticket;
 
 class UpdateTicketsPointsController extends ApiController
 {
@@ -16,36 +17,35 @@ class UpdateTicketsPointsController extends ApiController
     {
         $this->authorize('ticket.update_points');
 
-        foreach ($request->games as $gameArr) {
+        foreach ($request->games as $game) {
 
-            $game = Game::find($gameArr['id']);
-            $game->update([
-                'home_score' => $gameArr['home_score'],
-                'away_score' => $gameArr['away_score']
+            Game::where('id', $game['id'])->update([
+                'home_score' => $game['home_score'],
+                'away_score' => $game['away_score']
             ]);
 
             $operator = '>';
 
             // Update picks failed
-            if ($game->home_score < $game->away_score) {
+            if ($game['home_score'] < $game['away_score']) {
 
                 $operator = '<';
 
                 $quiniela
                     ->picks()
-                    ->where('game_id', $game->id)
+                    ->where('game_id', $game['id'])
                     ->whereColumn('away_score', '<=', 'home_score')
                     ->update([
                         'picks.points' => GameResultPredictionPointsEnum::FAILED_RESULT->value
                     ]);
 
-            } elseif ($game->home_score === $game->away_score) {
+            } elseif ($game['home_score'] === $game['away_score']) {
 
                 $operator = '=';
 
                 $quiniela
                     ->picks()
-                    ->where('game_id', $game->id)
+                    ->where('game_id', $game['id'])
                     ->where(function($query) {
                         $query->whereColumn('away_score', '>', 'home_score');
                         $query->OrWhereColumn('home_score', '>', 'away_score');
@@ -58,7 +58,7 @@ class UpdateTicketsPointsController extends ApiController
 
                 $quiniela
                     ->picks()
-                    ->where('game_id', $game->id)
+                    ->where('game_id', $game['id'])
                     ->whereColumn('home_score', '<=', 'away_score')
                     ->update([
                         'picks.points' => GameResultPredictionPointsEnum::FAILED_RESULT->value
@@ -68,24 +68,38 @@ class UpdateTicketsPointsController extends ApiController
             // Update picks with correct result
             $quiniela
                 ->picks()
-                ->where('game_id', $game->id)
+                ->where('game_id', $game['id'])
                 ->whereColumn('home_score', $operator, 'away_score')
                 ->update(['picks.points' => GameResultPredictionPointsEnum::CORRECT_RESULT->value]);
 
             // Update picks with exact scoreboard
             $quiniela
                 ->picks()
-                ->where('game_id', $game->id)
-                ->where('home_score', $game->home_score)
-                ->where('away_score', $game->away_score)
+                ->where('game_id', $game['id'])
+                ->where('home_score', $game['home_score'])
+                ->where('away_score', $game['away_score'])
                 ->update(['picks.points' => GameResultPredictionPointsEnum::EXACT_SCOREBOARD->value]);
         }
 
         // Update tickets points
-        foreach ($quiniela->tickets() as $ticket) {
+        foreach ($quiniela->tickets as $ticket) {
             $ticket->update([
                 'points' => $ticket->picks->sum('points')
             ]);
+        }
+
+        $tickets = $quiniela->tickets()->orderBy('points', 'DESC')->get();
+        $quiniela->loadMax('tickets', 'points');
+        $maxPoints = $quiniela->tickets_max_points;
+        $rank = 1;
+
+        foreach ($tickets as $ticket) {
+            if ($ticket->points != $maxPoints) {
+                $maxPoints = $ticket->points;
+                $rank++;
+            }
+            $ticket->position = $rank;
+            $ticket->save();
         }
 
         return new QuinielaResource($quiniela);

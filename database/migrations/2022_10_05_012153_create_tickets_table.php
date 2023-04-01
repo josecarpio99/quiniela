@@ -21,7 +21,7 @@ return new class extends Migration
             $table->foreignId('quiniela_id')->constrained()->cascadeOnDelete();
             $table->float('price', 8, 2, true);
             $table->tinyInteger('points')->nullable();
-            $table->string('status')->default(TicketStatusEnum::Pending);
+            $table->string('status')->default(TicketStatusEnum::Pending->value);
             $table->integer('position')->nullable();
             $table->timestamps();
         });
