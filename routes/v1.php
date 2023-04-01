@@ -34,6 +34,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::post('deposit/{deposit}/status', ChangeDepositStatusController::class);
         Route::post('withdraw/{withdraw}/status', ChangeWithdrawStatusController::class);
+        Route::post('user/{user}/update_balance', UpdateUserBalanceController::class);
     });
 
     Route::get('deposit', [App\Http\Controllers\Api\DepositController::class, 'index']);

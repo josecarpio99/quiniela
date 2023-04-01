@@ -24,7 +24,6 @@ class UpdateUserBalanceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => ['required', 'integer', 'exists:users,id'],
             'amount' => ['required', 'regex:/^\d+(\.\d{1,2})?$/'],
             'operation' => ['required', new Enum(BalanceHistoryOperationEnum::class)],
             'concept' => ['required', 'string']
