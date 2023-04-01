@@ -17,6 +17,7 @@ class UserController extends ApiController
      */
     public function index()
     {
+        dd(auth()->user()->getAuthPassword());
         $this->authorize('user.index');
 
         $users = User::query()

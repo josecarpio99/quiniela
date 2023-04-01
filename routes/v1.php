@@ -41,6 +41,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('user/{user}/update_balance', UpdateUserBalanceController::class);
     });
 
+    Route::get('profile/{user}', [App\Http\Controllers\Api\ProfileController::class, 'show']);
+    Route::put('profile/{user}', [App\Http\Controllers\Api\ProfileController::class, 'update']);
+
     Route::get('deposit', [App\Http\Controllers\Api\DepositController::class, 'index']);
     Route::post('deposit', [App\Http\Controllers\Api\DepositController::class, 'store']);
     Route::get('deposit/{deposit}', [App\Http\Controllers\Api\DepositController::class, 'show']);
