@@ -14,15 +14,22 @@ class AuthController extends ApiController
     public function login(Request $request)
     {
         $validated = $request->validate([
-            'email' => 'required|email|max:255',
+            'username' => 'required|max:255',
             'password' => 'required'
         ]);
 
-        if (! Auth::attempt($validated)) {
+
+        $fieldType = filter_var($request->username, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+
+        if (
+            ! Auth::attempt([
+                $fieldType => $request->username, 'password' => $request->password
+            ])
+        ) {
             return $this->unauthorized();
         }
 
-        $user = User::where('email', $request->email)->first();
+        $user = User::where($fieldType, $request->username)->first();
 
         return $this->success('User login successfully', [
             'token' => $user->createToken('User ' . $user->name . 'token')->plainTextToken,
@@ -33,12 +40,14 @@ class AuthController extends ApiController
     public function register(Request $request)
     {
         $validated = $request->validate([
+            'username' => ['required', 'min:4', 'max:20', 'alpha_num', 'unique:users,username'],
             'name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users,email',
             'password' => 'required|min:8|confirmed'
         ]);
 
         $user = User::create([
+            'username' => $request->username,
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password)
