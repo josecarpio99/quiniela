@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Enums\TransactionStatusEnum;
+use App\Enums\TransactionTypeEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -69,18 +70,19 @@ class User extends Authenticatable
     public function hasExceededWithdrawDailyLimit() : bool
     {
         $lastWithdraw = $this->lastWithdraw();
-
         if ($lastWithdraw) {
             return $lastWithdraw->created_at->diffInDays(now()) < Transaction::MAX_WITHDRAW_PER_DAY;;
         }
 
-        return true;
+        return false;
     }
 
-    public function lastWithdraw() : Transaction
+    public function lastWithdraw() : ?Transaction
     {
         return $this->transactions()
+            ->where('type', TransactionTypeEnum::Withdraw)
             ->where('status', '<>', TransactionStatusEnum::Rejected)
+            ->whereNotNull('created_at')
             ->latest()
             ->first();
     }

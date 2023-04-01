@@ -7,6 +7,8 @@ use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Enums\TransactionTypeEnum;
 use App\Enums\TransactionStatusEnum;
+use App\Enums\BalanceHistoryOperationEnum;
+use App\Actions\User\UpdateUserBalanceAction;
 use App\Exceptions\InsufficientUserBalanceException;
 use App\Exceptions\UserExceededWithdrawDailyLimitException;
 
@@ -27,7 +29,12 @@ class AdminStoreWithdrawAction
         );
 
         if ($request->update_user_balance) {
-            $user->decrement('balance', $transaction->amount);
+            (new UpdateUserBalanceAction())->execute(
+                $transaction->user,
+                $transaction->amount,
+                BalanceHistoryOperationEnum::Decrement->value,
+                'Withdraw #' . $transaction->id
+            );
         }
 
         return $transaction;
