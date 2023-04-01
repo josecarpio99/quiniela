@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\Admin\DepositController;
 use App\Http\Controllers\Api\Admin\QuinielaController;
 use App\Http\Controllers\Api\Admin\WithdrawController;
 use App\Http\Controllers\Api\Admin\PaymentMethodController;
+use App\Http\Controllers\Api\Admin\UpdateUserBalanceController;
 use App\Http\Controllers\Api\Admin\ChangeDepositStatusController;
 use App\Http\Controllers\Api\Admin\UpdateTicketsPointsController;
 use App\Http\Controllers\Api\Admin\UpdateTicketsStatusController;
@@ -34,7 +35,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::post('deposit/{deposit}/status', ChangeDepositStatusController::class);
         Route::post('withdraw/{withdraw}/status', ChangeWithdrawStatusController::class);
-        Route::post('user/{user}/update_balance', UpdateUserBalanceController::class);
+        Route::put('user/{user}/update_balance', UpdateUserBalanceController::class);
     });
 
     Route::get('deposit', [App\Http\Controllers\Api\DepositController::class, 'index']);
