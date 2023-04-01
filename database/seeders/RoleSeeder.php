@@ -19,6 +19,13 @@ class RoleSeeder extends Seeder
         $superAdmin = Role::create(['name' => 'Super admin']);
         $client = Role::create(['name' => 'Client']);
 
+        // User permissions
+        Permission::create(['name' => 'user.index'])->syncRoles([$superAdmin]);
+        Permission::create(['name' => 'user.store'])->syncRoles([$superAdmin]);
+        Permission::create(['name' => 'user.show'])->syncRoles([$superAdmin]);
+        Permission::create(['name' => 'user.update'])->syncRoles([$superAdmin]);
+        Permission::create(['name' => 'user.destroy'])->syncRoles([$superAdmin]);
+
         // Team permissions
         Permission::create(['name' => 'team.index'])->syncRoles([$superAdmin]);
         Permission::create(['name' => 'team.store'])->syncRoles([$superAdmin]);
