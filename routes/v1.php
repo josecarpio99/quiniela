@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\Admin\WithdrawController;
 use App\Http\Controllers\Api\Admin\PaymentMethodController;
 use App\Http\Controllers\Api\Admin\ChangeDepositStatusController;
 use App\Http\Controllers\Api\Admin\UpdateTicketsPointsController;
+use App\Http\Controllers\Api\Admin\UpdateTicketsStatusController;
 use App\Http\Controllers\Api\Admin\ChangeWithdrawStatusController;
 
 Route::post('register', [AuthController::class, 'register']);
@@ -29,6 +30,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::apiResource('quiniela.ticket', TicketController::class);
         });
         Route::post('quiniela/{quiniela}/ticket/update_points', UpdateTicketsPointsController::class)->name('ticket.update_points');
+        Route::post('quiniela/{quiniela}/ticket/update_status', UpdateTicketsStatusController::class)->name('ticket.update_status');
 
         Route::post('deposit/{deposit}/status', ChangeDepositStatusController::class);
         Route::post('withdraw/{withdraw}/status', ChangeWithdrawStatusController::class);

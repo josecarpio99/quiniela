@@ -12,7 +12,7 @@ class Quiniela extends Model
 
     protected $casts = [
         'close_at' => 'datetime',
-        'prize'    => 'array',
+        'prize'    => 'collection',
     ];
 
     public function games()

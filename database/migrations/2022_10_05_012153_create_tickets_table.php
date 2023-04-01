@@ -23,6 +23,7 @@ return new class extends Migration
             $table->tinyInteger('points')->nullable();
             $table->string('status')->default(TicketStatusEnum::Pending->value);
             $table->integer('position')->nullable();
+            $table->float('earned')->nullable();
             $table->timestamps();
         });
     }
