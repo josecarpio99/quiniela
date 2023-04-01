@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Models\Transaction;
 use App\Enums\TransactionStatusEnum;
+use App\Enums\BalanceHistoryOperationEnum;
 use App\Http\Controllers\Api\ApiController;
-use App\Http\Requests\Admin\ChangeDepositStatusRequest;
 use App\Http\Resources\TransactionResource;
+use App\Actions\User\UpdateUserBalanceAction;
+use App\Http\Requests\Admin\ChangeDepositStatusRequest;
 
 class ChangeDepositStatusController extends ApiController
 {
@@ -23,7 +25,12 @@ class ChangeDepositStatusController extends ApiController
 
             if ($request->status === TransactionStatusEnum::Approved->value) {
 
-                $transaction->user()->increment('balance', $transaction->amount);
+                (new UpdateUserBalanceAction())->execute(
+                    $transaction->user,
+                    $transaction->amount,
+                    BalanceHistoryOperationEnum::Increment->value,
+                    'Deposit #' . $transaction->id
+                );
 
             }
 

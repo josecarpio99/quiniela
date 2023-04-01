@@ -8,6 +8,8 @@ use App\Enums\TransactionTypeEnum;
 use App\Enums\TransactionStatusEnum;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Resources\TransactionResource;
+use App\Actions\User\UpdateUserBalanceAction;
+use App\Enums\BalanceHistoryOperationEnum;
 use App\Http\Requests\Admin\StoreDepositRequest;
 use App\Http\Requests\Admin\UpdateDepositRequest;
 use App\Http\Requests\Admin\DestroyDepositRequest;
@@ -42,7 +44,12 @@ class DepositController extends ApiController
         );
 
         if ($request->update_user_balance) {
-            $transaction->user->increment('balance', $request->amount);
+            (new UpdateUserBalanceAction())->execute(
+                $transaction->user,
+                $request->amount,
+                BalanceHistoryOperationEnum::Increment->value,
+                'Deposit #' . $transaction->id
+            );
         }
 
         return new TransactionResource($transaction);
