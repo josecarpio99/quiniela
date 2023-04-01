@@ -42,7 +42,7 @@ class DepositController extends ApiController
         );
 
         if ($request->update_user_balance) {
-            $transaction->user()->increment('balance', $request->amount);
+            $transaction->user->increment('balance', $request->amount);
         }
 
         return new TransactionResource($transaction);

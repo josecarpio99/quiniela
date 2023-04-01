@@ -84,4 +84,5 @@ class User extends Authenticatable
             ->latest()
             ->first();
     }
+
 }
