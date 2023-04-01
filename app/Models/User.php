@@ -56,6 +56,11 @@ class User extends Authenticatable
         return $this->hasMany(Transaction::class, 'user_id');
     }
 
+    public function balanceHistory() : HasMany
+    {
+        return $this->hasMany(BalanceHistory::class, 'user_id');
+    }
+
     public function hasEnoughBalance(float|int $amount) : bool
     {
         return $this->balance >= $amount;
