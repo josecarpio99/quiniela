@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use App\Enums\TicketStatusEnum;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
 {
@@ -20,6 +21,8 @@ return new class extends Migration
             $table->foreignId('quiniela_id')->constrained()->cascadeOnDelete();
             $table->float('price', 8, 2, true);
             $table->tinyInteger('points')->nullable();
+            $table->string('status')->default(TicketStatusEnum::Pending);
+            $table->integer('position')->nullable();
             $table->timestamps();
         });
     }
