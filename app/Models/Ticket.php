@@ -31,4 +31,11 @@ class Ticket extends Model
 
         return $query->where('user_id', $userId);
     }
+
+    protected static function booted() : void
+    {
+        static::creating(function(Ticket $ticket) {
+            $ticket->number_id = bin2hex(random_bytes(5));
+        });
+    }
 }
