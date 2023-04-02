@@ -20,6 +20,7 @@ return new class extends Migration
             $table->json('prize');
             $table->boolean('is_active')->default(true);
             $table->dateTime('close_at');
+            $table->boolean('has_three_for_two')->default(true);
             $table->timestamps();
         });
     }

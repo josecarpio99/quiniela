@@ -57,6 +57,11 @@ class User extends Authenticatable
         return $this->hasMany(Transaction::class, 'user_id');
     }
 
+    public function tickets() : HasMany
+    {
+        return $this->hasMany(Ticket::class);
+    }
+
     public function balanceHistory() : HasMany
     {
         return $this->hasMany(BalanceHistory::class, 'user_id');
@@ -85,6 +90,17 @@ class User extends Authenticatable
             ->whereNotNull('created_at')
             ->latest()
             ->first();
+    }
+
+    public function nextTicketIsFree(Quiniela $quiniela) : bool
+    {
+        $ticketsCount = $this->tickets()
+            ->where('quiniela_id', $quiniela->id)
+            ->count();
+
+        if ($ticketsCount <= 1) return false;
+
+        return  ($ticketsCount + 1) % 3 === 0;
     }
 
 }

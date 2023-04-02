@@ -32,6 +32,16 @@ class Ticket extends Model
         return $query->where('user_id', $userId);
     }
 
+    public function scopeFree(Builder $query)
+    {
+        return $query->where('price', 0);
+    }
+
+    public function scopeNotFree(Builder $query)
+    {
+        return $query->where('price', '>', 0);
+    }
+
     protected static function booted() : void
     {
         static::creating(function(Ticket $ticket) {

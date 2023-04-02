@@ -13,17 +13,29 @@ class StoreTicketAction
 {
     public function execute(Request $request, User $user, Quiniela $quiniela) : Ticket
     {
-        throw_if(! $user->hasEnoughBalance($quiniela->ticket_price), InsufficientUserBalanceException::class);
+        // dd($user->nextTicketIsFree($quiniela));
+        $isFree = false;
+
+        if ($quiniela->has_three_for_two) {
+            $isFree = $user->nextTicketIsFree($quiniela);
+        }
+
+        if (! $isFree) {
+            throw_if(! $user->hasEnoughBalance($quiniela->ticket_price), InsufficientUserBalanceException::class);
+        }
+
         throw_if(! $quiniela->gamesMatch(collect($request->picks)->pluck('game_id')->all()), GamesDoNotBelongToQuinielaException::class);
 
         $ticket = $quiniela->tickets()->create([
-            'user_id' => $request->user_id,
-            'price' => $quiniela->ticket_price
+            'user_id' => $user->id,
+            'price' => $isFree ? 0 : $quiniela->ticket_price
         ]);
 
         $ticket->picks()->createMany($request->picks);
 
-        $user->decrement('balance', $quiniela->ticket_price);
+        if (! $isFree) {
+            $user->decrement('balance', $quiniela->ticket_price);
+        }
 
         return $ticket;
     }
