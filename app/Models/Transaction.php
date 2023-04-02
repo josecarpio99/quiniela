@@ -30,6 +30,11 @@ class Transaction extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
+    public function paymentMethod()
+    {
+        return $this->belongsTo(PaymentMethod::class, 'payment_method');
+    }
+
     public function isDeposit() : bool
     {
         return $this->type === TransactionTypeEnum::Deposit;
