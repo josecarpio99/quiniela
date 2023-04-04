@@ -25,10 +25,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        if ($this->app->environment('local')) {
+            $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
+            $this->app->register(TelescopeServiceProvider::class);
+        }
+
         Model::unguard();
 
         // Gate::before(function ($user, $ability) {
         //     return $user->hasRole('Super admin') ? true : null;
         // });
+
+
     }
 }

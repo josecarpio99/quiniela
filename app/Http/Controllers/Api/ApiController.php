@@ -9,6 +9,9 @@ use App\Http\Controllers\Controller;
 
 class ApiController extends Controller
 {
+
+    protected $limit = 10;
+
     public function success($message, $data = [], $status = 200): JsonResponse
     {
         return response()->json([
@@ -39,5 +42,10 @@ class ApiController extends Controller
     public function noContent(): Response
     {
         return response()->noContent();
+    }
+
+    public function getDefaultPageLimit() : int
+    {
+        return $this->limit;
     }
 }

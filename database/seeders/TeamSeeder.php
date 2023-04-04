@@ -287,7 +287,7 @@ class TeamSeeder extends Seeder
         // ];
 
         // // France teams
-        // $france = Country::where('name', 'Spain')->first();
+        // $france = Country::where('name', 'France')->first();
 
         // $franceTeams = [
         //     [
@@ -378,75 +378,75 @@ class TeamSeeder extends Seeder
         // $germanyTeams = [
         //     [
         //         'name' => 'Bayern Munich',
-        //         'country_id' => $france->id
+        //         'country_id' => $germany->id
         //     ],
         //     [
         //         'name' => 'Dortmund',
-        //         'country_id' => $france->id
+        //         'country_id' => $germany->id
         //     ],
         //     [
         //         'name' => 'Union Berlin',
-        //         'country_id' => $france->id
+        //         'country_id' => $germany->id
         //     ],
         //     [
         //         'name' => 'SC Freiburg',
-        //         'country_id' => $france->id
+        //         'country_id' => $germany->id
         //     ],
         //     [
         //         'name' => 'RB Leipzig',
-        //         'country_id' => $france->id
+        //         'country_id' => $germany->id
         //     ],
         //     [
         //         'name' => 'Eintracht Frankfurt',
-        //         'country_id' => $france->id
+        //         'country_id' => $germany->id
         //     ],
         //     [
         //         'name' => 'Wolfsburg',
-        //         'country_id' => $france->id
+        //         'country_id' => $germany->id
         //     ],
         //     [
         //         'name' => 'Leverkusen',
-        //         'country_id' => $france->id
+        //         'country_id' => $germany->id
         //     ],
         //     [
         //         'name' => 'Mainz',
-        //         'country_id' => $france->id
+        //         'country_id' => $germany->id
         //     ],
         //     [
         //         'name' => 'Borussia Mönchengladbach',
-        //         'country_id' => $france->id
+        //         'country_id' => $germany->id
         //     ],
         //     [
         //         'name' => 'Werder Bremen',
-        //         'country_id' => $france->id
+        //         'country_id' => $germany->id
         //     ],
         //     [
         //         'name' => 'Augsburg',
-        //         'country_id' => $france->id
+        //         'country_id' => $germany->id
         //     ],
         //     [
         //         'name' => 'Koln',
-        //         'country_id' => $france->id
+        //         'country_id' => $germany->id
         //     ],
         //     [
         //         'name' => 'VFL Bochum',
-        //         'country_id' => $france->id
+        //         'country_id' => $germany->id
         //     ],
         //     [
         //         'name' => 'Hoffenheim',
-        //         'country_id' => $france->id
+        //         'country_id' => $germany->id
         //     ],
         //     [
         //         'name' => 'Hertha Berlin',
-        //         'country_id' => $france->id
+        //         'country_id' => $germany->id
         //     ],
         //     [
         //         'name' => 'Shalke 04',
-        //         'country_id' => $france->id
+        //         'country_id' => $germany->id
         //     ],
         //     [
         //         'name' => 'VfB Sttutgart',
-        //         'country_id' => $france->id
+        //         'country_id' => $germany->id
         //     ],
         // ];
 

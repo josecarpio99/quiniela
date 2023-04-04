@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
-use App\Http\Controllers\Api\ApiController;
 use App\Models\User;
+use Illuminate\Http\Request;
+use App\Http\Resources\UserResource;
+use Spatie\QueryBuilder\QueryBuilder;
+use App\Http\Controllers\Api\ApiController;
 use App\Http\Requests\Admin\StoreUserRequest;
 use App\Http\Requests\Admin\UpdateUserRequest;
-use App\Http\Resources\UserResource;
 
 class UserController extends ApiController
 {
@@ -15,15 +17,23 @@ class UserController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        dd(auth()->user()->getAuthPassword());
         $this->authorize('user.index');
 
-        $users = User::query()
-            ->latest();
+        $limit = $request->limit ?? 10;
 
-        return UserResource::collection(($users->paginate(10)));
+        $users = QueryBuilder::for(User::class)
+            ->allowedFilters([
+                'name',
+                'email'
+            ])
+            ->allowedSorts(['name', 'email', 'created_at'])
+            ->defaultSort('-created_at');
+
+        dd($users->toSql());
+
+        return UserResource::collection(($users->paginate($limit)));
     }
 
     /**

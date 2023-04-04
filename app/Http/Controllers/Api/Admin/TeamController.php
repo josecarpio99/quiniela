@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
-use App\Http\Controllers\Api\ApiController;
 use App\Models\Team;
+use Illuminate\Http\Request;
+use App\Http\Resources\TeamResource;
+use Spatie\QueryBuilder\QueryBuilder;
+use App\Http\Filters\TeamSearchFilter;
+use Spatie\QueryBuilder\AllowedFilter;
+use App\Http\Controllers\Api\ApiController;
 use App\Http\Requests\Admin\StoreTeamRequest;
 use App\Http\Requests\Admin\UpdateTeamRequest;
-use App\Http\Resources\TeamResource;
 
 class TeamController extends ApiController
 {
@@ -15,16 +19,22 @@ class TeamController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $this->authorize('team.index');
 
-        $teams = Team::query()
-            ->with('country')
-            ->where('is_country', false)
-            ->orderBy('name');
+        $limit = $request->limit ?? $this->getDefaultPageLimit();
 
-        return TeamResource::collection(($teams->paginate(10)));
+        $teams = QueryBuilder::for(Team::class)
+            ->with(['country'])
+            ->allowedFilters([
+                AllowedFilter::custom('search', new TeamSearchFilter)
+            ])
+            ->allowedSorts('name')
+            ->defaultSort('name')
+            ->where('is_country', false);
+
+        return TeamResource::collection(($teams->paginate($limit)));
     }
 
     /**
