@@ -14,4 +14,13 @@ class Team extends Model
     {
         return $this->belongsTo(Country::class);
     }
+
+    public function scopePaginateData($query, $limit)
+    {
+        if ($limit == 'all') {
+            return $query->get();
+        }
+
+        return $query->paginate($limit);
+    }
 }

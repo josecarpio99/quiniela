@@ -34,7 +34,7 @@ class TeamController extends ApiController
             ->defaultSort('name')
             ->where('is_country', false);
 
-        return TeamResource::collection(($teams->paginate($limit)));
+        return TeamResource::collection(($teams->paginateData($limit)));
     }
 
     /**
