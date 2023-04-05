@@ -15,9 +15,15 @@ class UserResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'      =>  $this->id,
-            'email'   =>  $this->email,
-            'balance' =>  $this->balance
+            'id'       =>  $this->id,
+            'username' =>  $this->username,
+            'email'    =>  $this->email,
+            'balance'  =>  $this->balance,
+            'tickets'  =>  TicketResource::collection($this->whenLoaded('tickets')),
+            'transactions' =>  TransactionResource::collection($this->whenLoaded('transactions')),
+            'transactionsCreated' =>  TransactionResource::collection($this->whenLoaded('transactionsCreated')),
+            'balanceHistory' =>  BalanceHistoryResource::collection($this->whenLoaded('balanceHistory'))
+
         ];
     }
 }

@@ -7,8 +7,10 @@ use Illuminate\Http\Request;
 use App\Http\Resources\UserResource;
 use Spatie\QueryBuilder\QueryBuilder;
 use App\Http\Controllers\Api\ApiController;
+use App\Http\Filters\UserSearchFilter;
 use App\Http\Requests\Admin\StoreUserRequest;
 use App\Http\Requests\Admin\UpdateUserRequest;
+use Spatie\QueryBuilder\AllowedFilter;
 
 class UserController extends ApiController
 {
@@ -21,19 +23,18 @@ class UserController extends ApiController
     {
         $this->authorize('user.index');
 
-        $limit = $request->limit ?? 10;
+        $limit = $request->limit ?? $this->getDefaultPageLimit();;
 
         $users = QueryBuilder::for(User::class)
             ->allowedFilters([
-                'name',
-                'email'
+                AllowedFilter::custom('search', new UserSearchFilter)
             ])
-            ->allowedSorts(['name', 'email', 'created_at'])
-            ->defaultSort('-created_at');
+            ->allowedSorts(['username', 'email', 'created_at'])
+            ->defaultSort('-created_at')
+            ->allowedIncludes(['tickets', 'transactions', 'transactionsCreated', 'balanceHistory'])
+            ->where('id', '<>', auth()->user()->id);
 
-        dd($users->toSql());
-
-        return UserResource::collection(($users->paginate($limit)));
+        return UserResource::collection(($users->paginateData($limit)));
     }
 
     /**

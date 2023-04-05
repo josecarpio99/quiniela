@@ -38,7 +38,6 @@ class UpdateUserRequest extends FormRequest
                 'max:255',
                 Rule::unique('users', 'email')->ignore($this->user->id)
             ],
-            'name' => ['required', 'max:255']
         ];
     }
 }

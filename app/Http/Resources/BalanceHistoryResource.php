@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TicketResource extends JsonResource
+class BalanceHistoryResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,13 +15,14 @@ class TicketResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' =>  $this->id,
+            'id'      =>  $this->id,
             'user_id' =>  $this->user_id,
-            'created_by' =>  $this->created_by,
-            'quiniela_id' =>  $this->quiniela_id,
-            'price' => $this->price,
-            'points' => $this->points,
-            'picks' => PickResource::collection($this->whenLoaded('picks'))
+            'prev_balance' =>  $this->prev_balance,
+            'amount' =>  $this->amount,
+            'new_balance' =>  $this->new_balance,
+            'operation' =>  $this->operation,
+            'concept' =>  $this->concept,
+            'created_at' =>  $this->created_at->format('d-m-Y H:i'),
         ];
     }
 }

@@ -34,8 +34,6 @@ class ProfileController extends ApiController
     {
         abort_if($user->id !== auth()->user()->id, 403);
 
-        $user->name = $request->name;
-
         if ($request->new_password) {
             $user->password = Hash::make($request->new_password);
         }

@@ -103,4 +103,13 @@ class User extends Authenticatable
         return  ($ticketsCount + 1) % 3 === 0;
     }
 
+    public function scopePaginateData($query, $limit)
+    {
+        if ($limit == 'all') {
+            return $query->get();
+        }
+
+        return $query->paginate($limit);
+    }
+
 }
