@@ -21,7 +21,8 @@ class QuinielaResource extends JsonResource
             'is_active' => $this->is_active,
             'close_at' => $this->close_at->format('Y-m-d H:i'),
             'prize'   => $this->prize,
-            'games'   => GameResource::collection($this->games)
+            'games'  =>  TicketResource::collection($this->whenLoaded('games')),
+            'tickets'  =>  TicketResource::collection($this->whenLoaded('tickets'))
         ];
     }
 }

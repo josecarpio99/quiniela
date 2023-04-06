@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
-use App\Http\Controllers\Api\ApiController;
 use App\Models\Quiniela;
+use Illuminate\Http\Request;
+use Spatie\QueryBuilder\QueryBuilder;
+use Spatie\QueryBuilder\AllowedFilter;
 use App\Http\Resources\QuinielaResource;
+use App\Http\Controllers\Api\ApiController;
 use App\Http\Requests\Admin\StoreQuinielaRequest;
 use App\Http\Requests\Admin\UpdateQuinielaRequest;
 
@@ -13,11 +16,21 @@ class QuinielaController extends ApiController
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $this->authorize('quiniela.index');
 
-        return QuinielaResource::collection((Quiniela::paginate(10)));
+        $limit = $request->limit ?? $this->getDefaultPageLimit();;
+
+        $users = QueryBuilder::for(Quiniela::class)
+            ->allowedFilters([
+                AllowedFilter::exact('is_active')
+            ])
+            ->allowedSorts(['close_at'])
+            ->defaultSort('-close_at')
+            ->allowedIncludes(['tickets', 'games']);
+
+        return QuinielaResource::collection(($users->paginate($limit)));
     }
 
     /**
