@@ -31,7 +31,9 @@ class UserController extends ApiController
             ])
             ->allowedSorts(['username', 'email', 'created_at'])
             ->defaultSort('-created_at')
-            ->allowedIncludes(['tickets', 'transactions', 'transactionsCreated', 'balanceHistory'])
+            ->allowedIncludes([
+                'tickets', 'transactions', 'transactionsCreated', 'balanceHistory', 'deposits', 'withdrawals'
+                ])
             ->where('id', '<>', auth()->user()->id);
 
         return UserResource::collection(($users->paginateData($limit)));

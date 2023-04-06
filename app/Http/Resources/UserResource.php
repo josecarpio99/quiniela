@@ -21,6 +21,8 @@ class UserResource extends JsonResource
             'balance'  =>  $this->balance,
             'tickets'  =>  TicketResource::collection($this->whenLoaded('tickets')),
             'transactions' =>  TransactionResource::collection($this->whenLoaded('transactions')),
+            'deposits' =>  TransactionResource::collection($this->whenLoaded('deposits')),
+            'withdrawals' =>  TransactionResource::collection($this->whenLoaded('withdrawals')),
             'transactionsCreated' =>  TransactionResource::collection($this->whenLoaded('transactionsCreated')),
             'balanceHistory' =>  BalanceHistoryResource::collection($this->whenLoaded('balanceHistory'))
 

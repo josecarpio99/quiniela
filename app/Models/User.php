@@ -57,6 +57,16 @@ class User extends Authenticatable
         return $this->hasMany(Transaction::class, 'user_id');
     }
 
+    public function deposits() : HasMany
+    {
+        return $this->hasMany(Transaction::class, 'user_id')->where('type', TransactionTypeEnum::Deposit);
+    }
+
+    public function withdrawals() : HasMany
+    {
+        return $this->hasMany(Transaction::class, 'user_id')->where('type', TransactionTypeEnum::Withdraw);
+    }
+
     public function tickets() : HasMany
     {
         return $this->hasMany(Ticket::class);
