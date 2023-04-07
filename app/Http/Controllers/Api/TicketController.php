@@ -6,6 +6,8 @@ use App\Models\Pick;
 use App\Models\User;
 use App\Models\Ticket;
 use App\Models\Quiniela;
+use Illuminate\Http\Request;
+use Spatie\QueryBuilder\QueryBuilder;
 use App\Http\Resources\TicketResource;
 use App\Actions\Ticket\StoreTicketAction;
 use App\Http\Requests\StoreTicketRequest;
@@ -18,13 +20,20 @@ class TicketController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Quiniela $quiniela)
+    public function index(Request $request, Quiniela $quiniela)
     {
-        $tickets = Ticket::query()
-            ->latest()
-            ->paginate(10);
+        $limit = $request->limit ?? $this->getDefaultPageLimit();;
 
-        return TicketResource::collection($tickets);
+        $tickets = QueryBuilder::for(Ticket::class)
+            ->allowedFilters([
+                'user_id',
+                'quiniela_id'
+            ])
+            ->allowedSorts(['created_at', 'earned', 'position'])
+            ->defaultSorts(['position', '-created_at'])
+            ->allowedIncludes(['user', 'quiniela', 'picks']);
+
+        return TicketResource::collection(($tickets->paginate($limit)));
     }
 
     /**

@@ -13,6 +13,7 @@ use App\Http\Requests\Admin\StoreTicketRequest;
 use App\Http\Requests\Admin\UpdateTicketRequest;
 use App\Http\Requests\Admin\DestroyTicketRequest;
 use Illuminate\Http\Request;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class TicketController extends ApiController
 {
@@ -21,11 +22,23 @@ class TicketController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Quiniela $quiniela)
+    public function index(Request $request, Quiniela $quiniela)
     {
         $this->authorize('ticket.index');
 
-        return TicketResource::collection((Ticket::paginate(10)));
+        $limit = $request->limit ?? $this->getDefaultPageLimit();;
+
+        $tickets = QueryBuilder::for(Ticket::class)
+            ->allowedFilters([
+                'user_id',
+                'quiniela_id',
+                'created_by'
+            ])
+            ->allowedSorts(['created_at', 'earned', 'position'])
+            ->defaultSorts(['position', '-created_at'])
+            ->allowedIncludes(['user', 'creator', 'quiniela', 'picks']);
+
+        return TicketResource::collection(($tickets->paginate($limit)));
     }
 
     /**
