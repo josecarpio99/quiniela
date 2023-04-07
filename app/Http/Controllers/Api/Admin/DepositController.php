@@ -13,19 +13,32 @@ use App\Enums\BalanceHistoryOperationEnum;
 use App\Http\Requests\Admin\StoreDepositRequest;
 use App\Http\Requests\Admin\UpdateDepositRequest;
 use App\Http\Requests\Admin\DestroyDepositRequest;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class DepositController extends ApiController
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $this->authorize('deposit.index');
 
-        return TransactionResource::collection(
-            Transaction::fromDeposits()->paginate(10)
-        );
+        $limit = $request->limit ?? $this->getDefaultPageLimit();
+
+        $deposits = QueryBuilder::for(Transaction::class)
+            ->allowedFilters([
+                'user_id',
+                'payment_method',
+                'created_by',
+                'status'
+            ])
+            ->allowedSorts(['date'])
+            ->defaultSort('-date')
+            ->allowedIncludes(['user', 'paymentMethod', 'creator'])
+            ->fromDeposits();
+
+        return TransactionResource::collection($deposits->paginate($limit));
     }
 
     /**

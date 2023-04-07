@@ -6,24 +6,36 @@ use App\Models\Transaction;
 use App\Mail\NewDepositRequest;
 use App\Enums\TransactionTypeEnum;
 use App\Enums\TransactionStatusEnum;
+use Spatie\QueryBuilder\QueryBuilder;
 use App\Http\Requests\StoreDepositRequest;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Resources\TransactionResource;
 use App\Actions\Notify\SendMailToAdminsAction;
+use Illuminate\Http\Request;
 
 class DepositController extends ApiController
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $deposits = Transaction::whereUser(auth()->user())
-            ->fromDeposits()
-            ->latest()
-            ->paginate(10);
+        $limit = $request->limit ?? $this->getDefaultPageLimit();
 
-        return TransactionResource::collection($deposits);
+        $deposits = QueryBuilder::for(Transaction::class)
+            ->allowedFilters([
+                'user_id',
+                'payment_method',
+                'created_by',
+                'status'
+            ])
+            ->allowedSorts(['date'])
+            ->defaultSort('-date')
+            ->allowedIncludes(['user', 'paymentMethod', 'creator'])
+            ->where('user_id', auth()->user()->id)
+            ->fromDeposits();
+
+        return TransactionResource::collection($deposits->paginate($limit));
     }
 
     /**

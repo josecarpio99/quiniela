@@ -24,7 +24,10 @@ class TransactionResource extends JsonResource
             'payment_reference' =>  $this->payment_reference,
             'status' =>  $this->status,
             'rejected_reason' =>  $this->rejected_reason,
-            'date' =>  $this->date?->format('Y-m-d')
+            'date' =>  $this->date?->format('Y-m-d'),
+            'user' => $this->when($this->relationLoaded('user'), new UserResource($this->user)),
+            'creator' => $this->when($this->relationLoaded('creator'), new UserResource($this->user)),
+            'paymentMethod' => $this->when($this->relationLoaded('paymentMethod'), new PaymentMethodResource($this->paymentMethod)),
         ];
     }
 }
