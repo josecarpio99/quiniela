@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Models\Game;
-use App\Http\Controllers\Api\ApiController;
+use Illuminate\Http\Request;
 use App\Http\Resources\GameResource;
+use Spatie\QueryBuilder\QueryBuilder;
+use Spatie\QueryBuilder\AllowedFilter;
+use Illuminate\Database\Eloquent\Builder;
+use App\Http\Controllers\Api\ApiController;
 use App\Http\Requests\Admin\StoreGameRequest;
 use App\Http\Requests\Admin\UpdateGameRequest;
 
@@ -15,11 +19,21 @@ class GameController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $this->authorize('game.index');
 
-        return GameResource::collection((Game::paginate(10)));
+        $limit = $request->limit ?? $this->getDefaultPageLimit();
+
+        $games = QueryBuilder::for(Game::class)
+            ->with(['homeTeam', 'awayTeam'])
+            ->allowedFilters([
+                AllowedFilter::callback('available', fn (Builder $query) => $query->available())
+            ])
+            ->allowedSorts(['start_at'])
+            ->defaultSort('start_at');
+
+        return GameResource::collection($games->paginateData($limit));
     }
 
     /**
