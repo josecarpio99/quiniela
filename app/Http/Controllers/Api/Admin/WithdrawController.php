@@ -4,28 +4,41 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Models\User;
 use App\Models\Transaction;
+use Illuminate\Http\Request;
 use App\Enums\TransactionTypeEnum;
 use App\Enums\TransactionStatusEnum;
+use Spatie\QueryBuilder\QueryBuilder;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Resources\TransactionResource;
-use App\Actions\Withdraw\AdminStoreWithdrawAction;
 use App\Http\Requests\Admin\StoreWithdrawRequest;
+use App\Actions\Withdraw\AdminStoreWithdrawAction;
 use App\Http\Requests\Admin\UpdateWithdrawRequest;
-use Illuminate\Http\Request;
 
 class WithdrawController extends ApiController
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $this->authorize('withdraw.index');
 
-        return TransactionResource::collection(
-            Transaction::fromWithdrawals()->paginate(10)
-        );
+        $limit = $request->limit ?? $this->getDefaultPageLimit();
+
+        $deposits = QueryBuilder::for(Transaction::class)
+            ->allowedFilters([
+                'user_id',
+                'payment_method',
+                'created_by',
+                'status'
+            ])
+            ->allowedSorts(['date'])
+            ->defaultSort('-date')
+            ->allowedIncludes(['user', 'paymentMethod', 'creator'])
+            ->fromWithdrawals();
+
+        return TransactionResource::collection($deposits->paginate($limit));
     }
 
     /**
