@@ -14,7 +14,7 @@ class UserExceededWithdrawDailyLimitException extends Exception
     public function render(Request $request): JsonResponse
     {
         return response()->json([
-            'message' => 'User excedeed the limit of withdrawals per day'
+            'message' => __('User excedeed the limit of withdrawals per day')
         ], 422);
     }
 }

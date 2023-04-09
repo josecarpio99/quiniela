@@ -14,7 +14,7 @@ class GamesDoNotBelongToQuinielaException extends Exception
     public function render(Request $request): JsonResponse
     {
         return response()->json([
-            'message' => 'Game/s do not belong to quiniela'
+            'message' => __('Game/s do not belong to quiniela')
         ], 422);
     }
 }

@@ -14,7 +14,7 @@ class InsufficientUserBalanceException extends Exception
     public function render(Request $request): JsonResponse
     {
         return response()->json([
-            'message' => 'User insufficient funds'
+            'message' => __('User insufficient funds')
         ], 422);
     }
 }
