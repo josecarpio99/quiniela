@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\Admin\DepositController;
 use App\Http\Controllers\Api\Admin\QuinielaController;
 use App\Http\Controllers\Api\Admin\WithdrawController;
 use App\Http\Controllers\Api\Admin\PaymentMethodController;
+use App\Http\Controllers\Api\Admin\BalanceHistoryController;
 use App\Http\Controllers\Api\Admin\UpdateUserBalanceController;
 use App\Http\Controllers\Api\Admin\ChangeDepositStatusController;
 use App\Http\Controllers\Api\Admin\UpdateTicketsPointsController;
@@ -23,6 +24,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::apiResource('user', UserController::class);
+        Route::get('user/{user}/balance_history', BalanceHistoryController::class);
+
         Route::apiResource('game', GameController::class);
         Route::apiResource('team', TeamController::class);
         Route::apiResource('quiniela', QuinielaController::class);
