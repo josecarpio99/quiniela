@@ -16,8 +16,8 @@ class GameResource extends JsonResource
     {
         return [
             'id'         => $this->id,
-            'home_team'  => $this->when($this->relationLoaded('homeTeam'), new TeamResource($this->homeTeam)),
-            'away_team'  => $this->when($this->relationLoaded('awayTeam'), new TeamResource($this->awayTeam)),
+            'home_team' => new TeamResource($this->whenLoaded('homeTeam')),
+            'away_team' => new TeamResource($this->whenLoaded('homeTeam')),
             'home_score' => $this->home_score,
             'away_score' => $this->away_score,
             'start_at'   => $this->start_at->format('Y-m-d H:i')

@@ -44,7 +44,7 @@ class Ticket extends Model
 
     public function scopeFreeCount(Builder $query)
     {
-        return $query->where('price', 0)->count();
+        return $query->free()->count();
     }
 
     public function scopePaid(Builder $query)
@@ -54,7 +54,7 @@ class Ticket extends Model
 
     public function scopePaidCount(Builder $query)
     {
-        return $query->where('price', '>', 0)->count();
+        return $query->paid()->count();
     }
 
     protected static function booted() : void

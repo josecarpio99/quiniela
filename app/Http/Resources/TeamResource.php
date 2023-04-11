@@ -17,7 +17,7 @@ class TeamResource extends JsonResource
         return [
             'id'      =>  $this->id,
             'name'    =>  $this->is_country ? $this->country->name : $this->name,
-            'country' =>  $this->when($this->relationLoaded('country'), $this->country->name)
+            'country' =>  $this->whenLoaded('country')
         ];
     }
 }
