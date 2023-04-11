@@ -2,18 +2,20 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
-use App\Actions\Ticket\AdminStoreTicketAction;
 use App\Models\Pick;
 use App\Models\User;
 use App\Models\Ticket;
 use App\Models\Quiniela;
+use Illuminate\Http\Request;
+use Spatie\QueryBuilder\QueryBuilder;
+use App\Http\Filters\TicketCostFilter;
 use App\Http\Resources\TicketResource;
+use Spatie\QueryBuilder\AllowedFilter;
 use App\Http\Controllers\Api\ApiController;
+use App\Actions\Ticket\AdminStoreTicketAction;
 use App\Http\Requests\Admin\StoreTicketRequest;
 use App\Http\Requests\Admin\UpdateTicketRequest;
 use App\Http\Requests\Admin\DestroyTicketRequest;
-use Illuminate\Http\Request;
-use Spatie\QueryBuilder\QueryBuilder;
 
 class TicketController extends ApiController
 {
@@ -31,7 +33,8 @@ class TicketController extends ApiController
         $tickets = QueryBuilder::for(Ticket::class)
             ->allowedFilters([
                 'user_id',
-                'created_by'
+                'created_by',
+                AllowedFilter::custom('cost', new TicketCostFilter)
             ])
             ->allowedSorts(['created_at', 'earned', 'position'])
             ->defaultSorts(['position', '-created_at'])
