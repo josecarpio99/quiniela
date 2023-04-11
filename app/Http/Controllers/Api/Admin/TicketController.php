@@ -31,14 +31,22 @@ class TicketController extends ApiController
         $tickets = QueryBuilder::for(Ticket::class)
             ->allowedFilters([
                 'user_id',
-                'quiniela_id',
                 'created_by'
             ])
             ->allowedSorts(['created_at', 'earned', 'position'])
             ->defaultSorts(['position', '-created_at'])
-            ->allowedIncludes(['user', 'creator', 'quiniela', 'picks']);
+            ->allowedIncludes([
+                'user',
+                'creator',
+                'picks'
+            ])
+            ->where('quiniela_id', $quiniela->id);
 
-        return TicketResource::collection(($tickets->paginate($limit)));
+        return TicketResource::collection(($tickets->paginate($limit)))
+            ->additional(['meta' => [
+                'freeTicketsCount' => $quiniela->tickets()->freeCount(),
+                'paidTicketsCount' => $quiniela->tickets()->paidCount()
+            ]]);
     }
 
     /**

@@ -42,9 +42,19 @@ class Ticket extends Model
         return $query->where('price', 0);
     }
 
-    public function scopeNotFree(Builder $query)
+    public function scopeFreeCount(Builder $query)
+    {
+        return $query->where('price', 0)->count();
+    }
+
+    public function scopePaid(Builder $query)
     {
         return $query->where('price', '>', 0);
+    }
+
+    public function scopePaidCount(Builder $query)
+    {
+        return $query->where('price', '>', 0)->count();
     }
 
     protected static function booted() : void
